@@ -1,0 +1,1610 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ⅱ. 기계요소설계 (학생용)</title>
+<style>
+:root{
+  --navy:#0F3057; --teal:#00879E; --gold:#FFC145; --ink:#1d2733; --muted:#5b6876;
+  --bg:#e9eef3; --paper:#ffffff; --line:#d6dee6; --teal-soft:#e2f3f5; --gold-soft:#fff4d6;
+  --navy-soft:#e6ecf3; --red:#c8423b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+  font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;overflow:hidden}
+#viewport{position:absolute;left:0;right:0;top:0;bottom:56px;display:flex;align-items:center;justify-content:center}
+body.teacher #viewport{bottom:206px}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.page{position:absolute;inset:0;background:var(--paper);border-radius:14px;box-shadow:0 6px 28px rgba(15,48,87,.14);
+  padding:38px 54px 30px;display:none;flex-direction:column;overflow:hidden}
+.page.on{display:flex}
+.kicker{font-size:15px;font-weight:700;color:var(--teal);letter-spacing:.5px;margin-bottom:6px}
+.kicker .pg{color:var(--muted);font-weight:400;margin-left:10px}
+h2{margin:0 0 18px;font-size:32px;color:var(--navy);line-height:1.25}
+h3{margin:0 0 8px;font-size:20px;color:var(--navy)}
+p{margin:0 0 10px;font-size:18px;line-height:1.6}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:26px;flex:1;min-height:0;margin-bottom:12px}
+.cols.c64{grid-template-columns:1.25fr 1fr}
+.cols.c46{grid-template-columns:1fr 1.25fr}
+.cols.c3{grid-template-columns:1fr 1fr 1fr}
+.col{display:flex;flex-direction:column;gap:12px;min-height:0}
+.card{background:var(--navy-soft);border-radius:10px;padding:14px 18px}
+.card.t{background:var(--teal-soft)}
+.card p:last-child{margin-bottom:0}
+.analogy{background:var(--gold-soft);border-left:6px solid var(--gold);border-radius:8px;padding:12px 16px;font-size:17px;line-height:1.6}
+.analogy b.lab,.supp b.lab{display:inline-block;font-size:14px;background:var(--gold);color:var(--navy);border-radius:4px;padding:1px 8px;margin-right:8px}
+.supp{background:var(--teal-soft);border-radius:8px;padding:10px 16px;font-size:15.5px;line-height:1.55}
+.supp b.lab{background:var(--teal);color:#fff}
+.oneline{margin-top:auto;background:var(--navy);color:#fff;border-radius:8px;padding:11px 18px;font-size:18px;line-height:1.5}
+.oneline b{color:var(--gold);margin-right:10px}
+ul.tight{margin:0;padding-left:22px;font-size:17.5px;line-height:1.6}
+ul.tight li{margin-bottom:3px}
+table.t{border-collapse:collapse;width:100%;font-size:16px;line-height:1.45}
+table.t th{background:var(--navy);color:#fff;font-weight:700;padding:7px 9px;text-align:center}
+table.t td{border-bottom:1px solid var(--line);padding:6px 9px;vertical-align:middle}
+table.t tr:nth-child(even) td{background:#f6f8fb}
+table.t td.c{text-align:center}
+.tag{display:inline-block;font-size:13px;font-weight:700;border-radius:4px;padding:1px 7px;color:#fff;background:var(--teal)}
+.tag.n{background:var(--navy)} .tag.g{background:var(--gold);color:var(--navy)} .tag.r{background:var(--red)}
+.formula{font-size:26px;font-weight:700;color:var(--navy);text-align:center;background:#fff;border:2px solid var(--teal);border-radius:10px;padding:8px}
+.wbox{background:#fbfcfd;border:1px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px;min-height:0}
+.wbox svg{width:100%;height:auto;display:block}
+.ctrl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:15px;color:var(--muted)}
+.ctrl button{font:inherit;font-size:14.5px;border:1px solid var(--teal);background:#fff;color:var(--teal);border-radius:6px;padding:4px 11px;cursor:pointer}
+.ctrl button.on{background:var(--teal);color:#fff}
+.ctrl .sp{width:10px}
+.readout{font-size:16px;color:var(--navy);font-weight:700;min-height:22px}
+.flow{display:flex;flex-direction:column;gap:6px}
+.flow .st{background:#fff;border:1.5px solid var(--teal);border-radius:7px;padding:6px 10px;font-size:15.5px;text-align:center}
+.flow .ar{text-align:center;color:var(--teal);font-size:15px;line-height:1}
+.memo{display:none}
+.tonly{display:none}
+body.teacher .tonly{display:block}
+body.teacher .ans{display:block!important}
+.cover{justify-content:center;background:linear-gradient(135deg,var(--navy) 0%,#164a7a 60%,var(--teal) 100%);color:#fff}
+.cover h1{font-size:52px;margin:10px 0 16px;line-height:1.2}
+.cover .sub{font-size:22px;opacity:.9}
+.chips{display:flex;gap:12px;margin-top:40px;flex-wrap:wrap}
+.chips span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);border-radius:30px;padding:9px 18px;font-size:18px}
+.chips span b{color:var(--gold);margin-right:6px}
+.quiz{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;font-size:16.5px}
+.q{border-bottom:1px dashed var(--line);padding:4px 0 7px;line-height:1.5}
+.q button{font:inherit;font-size:13px;border:1px solid var(--teal);background:#fff;color:var(--teal);border-radius:5px;padding:1px 8px;margin-left:6px;cursor:pointer}
+.ans{display:none;color:var(--red);font-weight:700;margin-top:2px}
+.sheet{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:stretch}
+.sheet div{border:2px dashed var(--teal);border-radius:10px;min-height:120px;padding:10px;font-size:15px;color:var(--muted);position:relative}
+.sheet div::after{content:'→';position:absolute;right:-17px;top:42%;color:var(--teal);font-weight:700}
+.sheet div:last-child::after{content:''}
+#nav{position:fixed;left:0;right:0;bottom:0;height:56px;background:var(--navy);display:flex;align-items:center;gap:10px;padding:0 16px;color:#fff;font-size:15px}
+#nav button,#nav select{font:inherit;font-size:15px;border:0;border-radius:6px;padding:7px 14px;cursor:pointer}
+#nav button{background:rgba(255,255,255,.14);color:#fff}
+#nav button:hover{background:rgba(255,255,255,.26)}
+#nav select{background:#fff;color:var(--navy);max-width:340px}
+#nav #mode{margin-left:auto;background:var(--gold);color:var(--navy);font-weight:700}
+#count{min-width:70px;text-align:center}
+#memoPanel{display:none;position:fixed;left:0;right:0;bottom:56px;height:150px;background:#fffbea;border-top:3px solid var(--gold);
+  padding:10px 22px;overflow:auto;font-size:15.5px;line-height:1.6;color:var(--ink)}
+#memoPanel b.h{color:var(--navy)}
+body.teacher #memoPanel{display:block}
+#memoPanel ul{margin:2px 0;padding-left:20px}
+svg text{font-family:'Malgun Gothic','맑은 고딕',sans-serif}
+.supp b.lab.ex{background:var(--red)}
+.mini{font-size:15.5px;color:var(--muted);line-height:1.5;margin:0}
+.big{font-size:20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.box{border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;background:#fff;font-size:15.5px;line-height:1.5}
+.box h4{margin:0 0 4px;font-size:16.5px;color:var(--navy)}
+.box.hl{border-color:var(--teal);background:var(--teal-soft)}
+.box.gd{border-color:var(--gold);background:var(--gold-soft)}
+.ctrl input[type=range]{width:180px;accent-color:#00879E}
+.sec-cover{justify-content:center;background:linear-gradient(135deg,#164a7a 0%,var(--teal) 100%);color:#fff}
+.sec-cover h1{font-size:48px;margin:6px 0 14px}
+.sec-cover .sub{font-size:21px;opacity:.92;line-height:1.6}
+.sec-cover .num{font-size:90px;font-weight:800;color:var(--gold);line-height:1}
+.sortq{display:flex;flex-wrap:wrap;gap:8px}
+.sortq button{font:inherit;font-size:15.5px;border:1.5px solid var(--navy);background:#fff;color:var(--navy);border-radius:20px;padding:5px 14px;cursor:pointer}
+.sortq button.phy{background:var(--teal);border-color:var(--teal);color:#fff}
+.sortq button.chm{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.bits{display:flex;gap:8px;align-items:center}
+.bits button{font:inherit;font-size:20px;font-weight:700;width:50px;height:50px;border-radius:8px;border:2px solid var(--navy);background:#fff;color:var(--navy);cursor:pointer}
+.bits button.on{background:var(--navy);color:var(--gold)}
+.lamp{display:inline-block;width:16px;height:16px;border-radius:50%;background:#cfd6dd;border:1.5px solid var(--navy);vertical-align:middle;margin:0 4px}
+.lamp.on{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.tag{white-space:nowrap}
+.bigmini .mini{font-size:17px;line-height:1.6}
+
+
+/* 컴퓨터응용가공산업기사 수업자료 추가 스타일 */
+.lesson{display:inline-block;background:var(--gold);color:var(--navy);font-weight:800;border-radius:6px;padding:1px 9px;margin-right:8px;font-size:14px}
+.gq{display:inline-block;font-size:12.5px;font-weight:700;border-radius:4px;padding:0 6px;background:var(--navy-soft);color:var(--navy);border:1px solid var(--navy);margin-left:4px;vertical-align:1px}
+.chk{color:var(--red);font-weight:800}
+.word{background:#fff;border:1.5px dashed var(--teal);border-radius:8px;padding:8px 12px;font-size:15px;line-height:1.5}
+.word b{color:var(--teal)}
+.sortq button.c1{background:var(--teal);border-color:var(--teal);color:#fff}
+.sortq button.c2{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.sortq button.c3{background:var(--navy);border-color:var(--navy);color:#fff}
+.sortq button.bad{background:#fbe3e1;border-color:var(--red);color:var(--red)}
+.legend{display:flex;gap:14px;font-size:14px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.ox{display:flex;gap:6px;margin-top:4px}
+.ox button{font:inherit;font-size:14px;border:1.5px solid var(--navy);background:#fff;color:var(--navy);border-radius:6px;padding:2px 12px;cursor:pointer}
+.ox button.right{background:var(--teal);border-color:var(--teal);color:#fff}
+.ox button.wrong{background:#fbe3e1;border-color:var(--red);color:var(--red)}
+.q .fb{font-size:14px;color:var(--muted);margin-top:2px;min-height:18px}
+.drill{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:16px}
+.drill input{font:inherit;font-size:16px;width:110px;padding:4px 8px;border:1.5px solid var(--teal);border-radius:6px}
+.drill button{font:inherit;font-size:14.5px;border:1px solid var(--teal);background:var(--teal);color:#fff;border-radius:6px;padding:5px 12px;cursor:pointer}
+.drill button.sub{background:#fff;color:var(--teal)}
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:6px}
+.steps div{counter-increment:s;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:6px 10px 6px 40px;position:relative;font-size:15.5px;line-height:1.5}
+.steps div::before{content:counter(s);position:absolute;left:9px;top:6px;width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:13px;font-weight:700;text-align:center;line-height:22px}
+.steps div.hl{border-color:var(--gold);background:var(--gold-soft)}
+body.teacher span.tonly{display:inline-block}
+/* 25차시 미니 모의고사 */
+.mk #mk-head{display:flex;align-items:center;gap:8px}
+.mk-no-big{font-size:26px;font-weight:800;color:var(--navy);min-width:40px}
+.mk #mk-q{font-size:19px;line-height:1.55;color:var(--ink);font-weight:600}
+.mk #mk-opts{display:flex;flex-direction:column;gap:6px}
+.mk-opt{font:inherit;font-size:16.5px;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;cursor:pointer;color:var(--ink)}
+.mk-opt:hover:not(:disabled){border-color:var(--teal)}
+.mk-opt.right{background:var(--teal);border-color:var(--teal);color:#fff}
+.mk-opt.wrong{background:#fbe3e1;border-color:var(--red);color:var(--red)}
+.mk-opt:disabled{cursor:default}
+.mk-match{display:flex;flex-direction:column;gap:6px;font-size:16px}
+.mk-match div{display:flex;align-items:center;gap:10px}
+.mk-match b{min-width:120px}
+.mk-match select{font:inherit;font-size:15px;padding:4px 6px;border:1.5px solid var(--teal);border-radius:6px;min-width:330px}
+.mk-match select.right{border-color:var(--teal);background:var(--teal-soft)}
+.mk-match select.wrong{border-color:var(--red);background:#fbe3e1}
+.mk-go{font:inherit;font-size:15px;align-self:flex-start;border:1px solid var(--teal);background:var(--teal);color:#fff;border-radius:6px;padding:5px 14px;cursor:pointer}
+.mk-ok{color:var(--teal);font-weight:800;font-size:16.5px}
+.mk-no{color:var(--red);font-weight:800;font-size:16.5px}
+.mk-ex{font-size:15px;line-height:1.5;color:var(--ink);margin-top:3px}
+.mk-res{font-size:24px;color:var(--navy)}
+.mk-res b{font-size:34px;color:var(--teal)}
+.mk-wl{display:flex;flex-wrap:wrap;gap:5px}
+.mk-wl button{font:inherit;font-size:13.5px;border:1px solid var(--red);background:#fff;color:var(--red);border-radius:6px;padding:3px 8px;cursor:pointer}
+.mk-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.mk-grid button{font:inherit;font-size:15px;font-weight:700;border:1.5px solid var(--navy);background:#fff;color:var(--navy);border-radius:6px;padding:5px 0;cursor:pointer}
+.mk-grid button.ok{background:var(--teal);border-color:var(--teal);color:#fff}
+.mk-grid button.no{background:#fbe3e1;border-color:var(--red);color:var(--red)}
+.mk-grid button.cur{outline:3px solid var(--gold);outline-offset:1px}
+/* 26차시 플래시카드 */
+.fc-card{background:#fff;border:2px solid var(--navy);border-radius:14px;min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px;text-align:center}
+.fc-code{font-size:64px;font-weight:800;color:var(--navy);letter-spacing:1px}
+.fc-mean{font-size:22px;font-weight:700;color:var(--teal);min-height:32px}
+.fc-tag{font-size:14px;font-weight:700;border-radius:5px;padding:1px 9px;background:var(--gold-soft);color:#9a7400;border:1px solid var(--gold)}
+
+/* ===== 새 디자인 (시안 B: 면 카드 · 공학 도면풍 팔레트) — 전 단원 공통 =====
+   base.css·extra.css 뒤에 덧붙는다. 내용·스크립트는 그대로 두고 모양만 바꾼다. */
+
+/* 1. 색: 옛 역할을 그대로 새 색에 일대일로 옮긴다 */
+:root{
+  --navy:#1B2430;        /* 잉크: 제목·외곽선 (옛 남색) */
+  --teal:#2457D6;        /* 코발트: 강조·치수선 (옛 청록) */
+  --gold:#E8A317;        /* 앰버: 핵심 표시 (옛 금색) — 글자색으로 쓰지 않고 면에만 */
+  --red:#C62828;         /* 정답·오답·그림 강조 */
+  --ink:#1B2430; --muted:#4A5563;
+  --bg:#D9DEE5;          /* 슬라이드 바깥 */
+  --paper:#F4F6F9;       /* 슬라이드 바탕 */
+  --card:#FFFFFF;
+  --line:#D5DAE1;
+  --teal-soft:#EAF0FC; --gold-soft:#FFF6E0; --navy-soft:#EEF1F5;
+  --gold-ink:#8A5A00;    /* 앰버 면 위의 글자 */
+  --shadow:0 1px 3px rgba(27,36,48,.10),0 2px 8px rgba(27,36,48,.06);
+}
+
+/* 2. 그림(SVG) 속 직접 적힌 색을 새 팔레트로 */
+[fill="#0F3057" i]{fill:#1B2430} [stroke="#0F3057" i]{stroke:#1B2430}
+[fill="#00879E" i]{fill:#2457D6} [stroke="#00879E" i]{stroke:#2457D6}
+[fill="#FFC145" i]{fill:#E8A317} [stroke="#FFC145" i]{stroke:#E8A317}
+[fill="#5B6876" i]{fill:#4A5563} [stroke="#5B6876" i]{stroke:#4A5563}
+[fill="#C8423B" i]{fill:#C62828} [stroke="#C8423B" i]{stroke:#C62828}
+[fill="#E2F3F5" i]{fill:#EAF0FC} [stroke="#E2F3F5" i]{stroke:#EAF0FC}
+[fill="#E6ECF3" i]{fill:#EEF1F5}
+[fill="#FFF4D6" i]{fill:#FFF6E0}
+[fill="#FBE3E1" i]{fill:#FDECEC}
+[fill="#7FC3CF" i]{fill:#8FB0EE} [stroke="#7FC3CF" i]{stroke:#8FB0EE}
+[fill="#9A7400" i]{fill:#8A5A00}
+[fill="#5FB3C2" i],[fill="#4FB4C4" i]{fill:#5C86E6}
+[stroke="#5FB3C2" i],[stroke="#4FB4C4" i]{stroke:#5C86E6}
+[style*="background:#0F3057" i]{background:#1B2430!important}
+[style*="background:#00879E" i]{background:#2457D6!important}
+[style*="background:#FFC145" i]{background:#E8A317!important}
+[style*="background:#fbe3e1" i]{background:#FDECEC!important;border-color:#C62828!important}
+.ctrl input[type=range]{accent-color:#2457D6}
+
+/* 3. 바탕과 쪽 */
+html,body{background:var(--bg)}
+.page{background:var(--paper);border-radius:12px;box-shadow:0 8px 30px rgba(27,36,48,.18);padding:34px 50px 26px}
+.kicker{font-size:16px;font-weight:700;color:var(--teal);letter-spacing:.3px;margin-bottom:4px}
+.kicker .pg{color:var(--muted)}
+h2{font-size:34px;color:var(--navy);letter-spacing:-.5px;margin-bottom:18px}
+h3{font-size:22px;color:var(--navy)}
+p{font-size:19px;line-height:1.6}
+.cols{gap:20px}
+.col{gap:12px}
+
+/* 4. 카드: 흰 면 + 약한 그림자 */
+.card,.card.t,.wbox,.box{background:var(--card);border:0;border-radius:10px;box-shadow:var(--shadow)}
+.card{padding:14px 18px}
+.card.t{box-shadow:var(--shadow),inset 4px 0 0 var(--teal)}
+.box{padding:11px 14px;font-size:17px;line-height:1.5}
+.box h4{font-size:19px;color:var(--navy)}
+.box.hl{background:var(--teal-soft);box-shadow:none}
+.box.gd{background:var(--gold-soft);box-shadow:none}
+.wbox{padding:10px;background:#fff}
+
+.analogy{background:var(--gold-soft);border-left:0;border-radius:10px;box-shadow:var(--shadow);padding:12px 16px;font-size:17px}
+.analogy b.lab,.supp b.lab{font-size:16px;background:var(--gold);color:var(--navy);border-radius:4px;padding:0 8px}
+.supp{background:var(--teal-soft);border-radius:10px;font-size:17px;padding:10px 16px}
+.supp b.lab{background:var(--teal);color:#fff}
+.supp b.lab.ex{background:var(--red)}
+.oneline{background:var(--navy);border-radius:10px;font-size:19px;padding:11px 18px}
+.oneline b{color:var(--gold)}
+
+ul.tight{font-size:19px}
+.mini{font-size:17px;color:var(--muted)}
+.bigmini .mini{font-size:18px}
+.word{background:#fff;border:1.5px dashed var(--teal);font-size:17px}
+
+/* 5. 표 */
+table.t{font-size:17px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+table.t th{background:var(--navy);padding:8px 10px}
+table.t td{border-bottom:1px solid var(--line);padding:6px 10px}
+table.t tr:nth-child(even) td{background:#F7F9FB}
+
+/* 6. 표시 조각 */
+.tag{font-size:16px;border-radius:4px}
+.tag.g{background:var(--gold);color:var(--navy)}
+.lesson{background:var(--gold);color:var(--navy);font-size:16px;border-radius:5px}
+.gq{font-size:16px;background:var(--navy-soft);color:var(--navy);border-color:var(--navy)}
+.formula{background:#fff;border:2px solid var(--teal);border-radius:10px;box-shadow:var(--shadow)}
+.readout{font-size:17px;color:var(--navy)}
+.legend{font-size:16px;color:var(--muted)}
+.flow .st{background:#fff;border:1.5px solid var(--teal);border-radius:8px;font-size:17px}
+.flow .ar{font-size:16px}
+.steps div{background:#fff;border:0;box-shadow:var(--shadow);font-size:17px}
+.steps div::before{background:var(--teal);font-size:14px}
+.steps div.hl{background:var(--gold-soft);box-shadow:inset 4px 0 0 var(--gold)}
+
+/* 7. 조작 단추 */
+.ctrl{font-size:16px;color:var(--muted)}
+.ctrl button,.q button,.drill button,.ox button{font-size:16px;border:1.5px solid var(--teal);background:#fff;color:var(--teal);border-radius:7px}
+.ctrl button{padding:4px 12px}
+.ctrl button.on,.drill button{background:var(--teal);color:#fff}
+.drill button.sub{background:#fff;color:var(--teal)}
+.drill{font-size:17px}
+.drill input{font-size:17px;border:1.5px solid var(--teal);border-radius:7px}
+.ox button{border-color:var(--navy);color:var(--navy);padding:2px 14px}
+.ox button.right{background:var(--teal);border-color:var(--teal);color:#fff}
+.ox button.wrong{background:#FDECEC;border-color:var(--red);color:var(--red)}
+.sortq button{font-size:17px;border-color:var(--navy);color:var(--navy)}
+.sortq button.bad{background:#FDECEC}
+
+/* 8. 퀴즈 */
+.quiz{font-size:17px;gap:10px 16px;align-content:start}
+.q{background:var(--card);border:0;border-radius:10px;box-shadow:var(--shadow);padding:8px 14px 9px}
+table.t td.c{white-space:nowrap}
+.q .fb{font-size:16px}
+.ans{color:var(--red)}
+
+/* 9. 표지·차시 표지: 그라데이션 대신 단색 */
+.cover{background:var(--navy)}
+.cover h1{font-size:54px;letter-spacing:-1px}
+.cover .kicker{color:var(--gold)!important}
+.chips span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.28);font-size:18px}
+.chips span b{color:var(--gold)}
+/* 차시 표지: 밝은 바탕 + 왼쪽 코발트 띠 + 앰버 밑줄 */
+.sec-cover{background:var(--paper);color:var(--navy);box-shadow:0 8px 30px rgba(27,36,48,.18),inset 16px 0 0 var(--teal);padding-left:90px}
+.sec-cover .num{color:var(--teal);font-size:110px;letter-spacing:-3px}
+.sec-cover h1{color:var(--navy);font-size:48px;letter-spacing:-1px;margin:10px 0 18px;padding-bottom:16px;
+  background:linear-gradient(var(--gold),var(--gold)) left bottom/120px 6px no-repeat}
+.sec-cover .sub{font-size:21px;color:var(--muted);opacity:1}
+
+/* 10. 아래 막대와 교사 메모 */
+#nav{background:var(--navy);font-size:16px}
+#nav button,#nav select{font-size:16px}
+#nav #mode{background:var(--gold);color:var(--navy)}
+#memoPanel{background:#FFF8E8;border-top:3px solid var(--gold);font-size:17px}
+
+/* 11. 조각 HTML에 남은 작은 인라인 글자 크기를 최소 16px로 */
+[style*="font-size:13.5px"],[style*="font-size:14px"],[style*="font-size:14.5px"],[style*="font-size:15px"],[style*="font-size:15.5px"]{font-size:16px!important}
+
+/* 12. 다른 단원에서 쓰는 색·요소 */
+[fill="#0B2238" i]{fill:#11171F} [stroke="#0B2238" i]{stroke:#11171F}
+[fill="#16395C" i]{fill:#2A3644} [stroke="#16395C" i]{stroke:#2A3644}
+[fill="#BFE3EA" i],[fill="#9FD0D8" i]{fill:#C9D8F6}
+[style*="color:#0F3057" i]{color:var(--navy)!important}
+[style*="color:#5b6876" i]{color:var(--muted)!important}
+[style*="color:#c8423b" i]{color:var(--red)!important}
+[style*="border-color:#c8423b" i]{border-color:var(--red)!important}
+[style*="background:#c8423b" i]{background:var(--red)!important}
+[style*="border:1px solid #0F3057" i]{border-color:var(--navy)!important}
+.chk{color:var(--red)}
+/* Ⅳ 25차시 모의고사 */
+.mk #mk-q{font-size:20px}
+.mk-opt{font-size:17px;border:0;border-radius:9px;box-shadow:var(--shadow);background:#fff}
+.mk-opt:hover:not(:disabled){box-shadow:var(--shadow),inset 0 0 0 1.5px var(--teal)}
+.mk-opt.right{background:var(--teal);color:#fff}
+.mk-opt.wrong{background:#FDECEC;color:var(--red);box-shadow:inset 0 0 0 1.5px var(--red)}
+.mk-match{font-size:17px}
+.mk-match select{font-size:16px;border-radius:7px}
+.mk-go{font-size:16px;border-radius:7px}
+.mk-ok,.mk-no{font-size:17px}
+.mk-ok{color:var(--teal)} .mk-no{color:var(--red)}
+.mk-ex{font-size:16px}
+.mk-wl button{font-size:16px;border-color:var(--red);color:var(--red)}
+.mk-grid button{font-size:16px;border-color:var(--navy);color:var(--navy);border-radius:7px}
+.mk-grid button.ok{background:var(--teal);border-color:var(--teal);color:#fff}
+.mk-grid button.cur{outline-color:var(--gold)}
+/* Ⅳ 26차시 플래시카드 */
+.fc-card{border:0;border-radius:14px;box-shadow:var(--shadow);background:#fff}
+.fc-code{color:var(--navy)}
+.fc-mean{color:var(--teal)}
+.fc-tag{font-size:16px;background:var(--gold-soft);color:var(--gold-ink);border-color:var(--gold)}
+
+/* 13. 교사용 쪽(학생 보기에서 숨김): 표·메모를 촘촘하게 */
+.teacher-only p{font-size:16px;line-height:1.5}
+.teacher-only table.t{font-size:16px}
+.teacher-only table.t td{padding:4px 9px;line-height:1.35}
+
+body.print #memoPanel,body.print #nav{display:none!important}body.print #viewport{bottom:0!important}
+/* 자습판(Ⅲ·Ⅳ): 기출 번호 학생에게 표시, 휴대폰·태블릿 대응 */
+span.tonly{display:inline-block}
+.q .fb .fb-ok{color:#1f7a3a}
+.q .fb .fb-no{color:var(--red)}
+.q .fb{color:var(--ink);font-size:15px;line-height:1.35}
+.q .fb .fb-show{font:inherit;font-size:15px;border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:6px;padding:1px 10px;margin-left:4px;cursor:pointer}
+#rot{display:none;position:fixed;left:0;right:0;top:0;z-index:50;background:var(--navy);color:#fff;font-size:15px;line-height:1.45;padding:10px 12px;gap:10px;align-items:center}
+#rot button{flex:none;font:inherit;border:0;border-radius:6px;background:#fff;color:var(--navy);padding:6px 12px;font-weight:700}
+@media (orientation:portrait) and (max-width:900px){body:not(.rot-off) #rot{display:flex}}
+@media (pointer:coarse){
+  #nav{height:64px}
+  #viewport{bottom:64px}
+  #nav button{padding:10px 16px;font-size:17px}
+  #nav select{font-size:16px;padding:9px 8px}
+}
+@media (max-width:700px){
+  #nav{gap:6px;padding:0 8px}
+  #nav select{max-width:40vw;min-width:0}
+  #nav #count{font-size:14px;white-space:nowrap}
+}
+.flow .st.lit{background:var(--gold);color:var(--navy);box-shadow:0 0 0 3px rgba(232,163,23,.35)}
+@media (max-width:480px){#nav select{display:none}}
+
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00879E"/></marker>
+<marker id="ahn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0F3057"/></marker>
+<marker id="ahs" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M10 0L0 5L10 10z" fill="#0F3057"/></marker>
+<pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#e6ecf3"/><line x1="0" y1="0" x2="0" y2="8" stroke="#0F3057" stroke-width="2"/></pattern>
+</defs></svg>
+
+<div id="viewport"><div id="stage">
+<!-- 표지 -->
+<section class="page cover" data-title="표지">
+  <div class="kicker" style="color:var(--gold)">과정평가형 컴퓨터응용가공산업기사 · 외부평가 대비 · 2027 교재 Ⅱ. 기계요소설계 (8~11쪽)</div>
+  <h1>Ⅱ. 기계요소설계<br>도면을 읽고, 형상을 만든다</h1>
+  <div class="sub">능력단위: 도면검토(1501020116) · 3D형상모델링작업(1501020113)</div>
+  <div class="chips">
+    <span><b>7</b>도면의 종류·선·보조기호</span><span><b>8</b>치수 기입과 베어링 호칭</span><span><b>9</b>공차·끼워맞춤·IT 등급</span><span><b>10</b>표면 거칠기·기하공차</span><span><b>11</b>3D 모델링 명령·파일 형식</span>
+  </div>
+  
+</section>
+
+<!-- 학습 흐름 -->
+<section class="page" data-title="Ⅱ단원 학습 흐름">
+  <div class="kicker">Ⅱ. 기계요소설계 <span class="pg">들어가기</span></div>
+  <h2>도면은 기계의 '언어'이다</h2>
+  <div class="cols c64">
+    <div class="col">
+      <table class="t">
+        <tr><th>차시</th><th>주제</th><th>핵심 질문</th><th>교재</th></tr>
+        <tr><td class="c"><span class="lesson">7</span></td><td>도면의 종류·선·보조기호</td><td>선의 굵기와 모양은 무엇을 뜻하는가?</td><td class="c">8쪽</td></tr>
+        <tr><td class="c"><span class="lesson">8</span></td><td>치수 기입과 베어링 호칭</td><td>같은 부품도 치수를 어떻게 넣느냐에 따라 달라지는가?</td><td class="c">8·9쪽</td></tr>
+        <tr><td class="c"><span class="lesson">9</span></td><td>공차·끼워맞춤·IT 등급</td><td>구멍과 축은 얼마나 정확히 맞아야 하는가?</td><td class="c">8쪽</td></tr>
+        <tr><td class="c"><span class="lesson">10</span></td><td>표면 거칠기·가공 기호·기하공차</td><td>표면의 '매끄러움'과 '바른 모양'은 어떻게 지시하는가?</td><td class="c">9쪽</td></tr>
+        <tr><td class="c"><span class="lesson">11</span></td><td>3D 모델링 명령·파일 형식</td><td>2D 스케치는 어떻게 3D 형상이 되는가?</td><td class="c">10~11쪽</td></tr>
+      </table>
+      <div class="card t"><p><b>한 줄 요약</b> — 도면검토는 도면에 담긴 <b>선·치수·공차·거칠기·기하공차</b>를 정확히 읽는 일이고, 3D형상모델링은 그 정보를 <b>3D 형상</b>으로 만드는 일이다. CNC 프로그래밍(Ⅲ단원)은 모두 이 도면에서 출발한다.</p></div>
+    </div>
+    <div class="col">
+      <div class="wbox"><svg viewBox="0 0 460 300">
+        <rect x="20" y="30" width="190" height="130" rx="6" fill="#fff" stroke="#0F3057" stroke-width="2"/>
+        <rect x="60" y="70" width="110" height="60" fill="none" stroke="#0F3057" stroke-width="3"/>
+        <line x1="40" y1="100" x2="190" y2="100" stroke="#00879E" stroke-width="1.2" stroke-dasharray="12 3 2 3"/>
+        <line x1="60" y1="148" x2="170" y2="148" stroke="#0F3057" stroke-width="1" marker-start="url(#ahs)" marker-end="url(#ahn)"/>
+        <text x="115" y="145" text-anchor="middle" font-size="11" fill="#0F3057">∅40 H7</text>
+        <text x="115" y="56" text-anchor="middle" font-size="11" fill="#5b6876">2D 도면 (7~10차시)</text>
+        <g transform="translate(270,40)">
+          <polygon points="20,40 110,10 160,40 70,70" fill="#e2f3f5" stroke="#00879E" stroke-width="2"/>
+          <polygon points="20,40 70,70 70,130 20,100" fill="#7fc3cf" stroke="#00879E" stroke-width="2"/>
+          <polygon points="70,70 160,40 160,100 70,130" fill="#00879E" stroke="#0F3057" stroke-width="2"/>
+          <text x="90" y="160" text-anchor="middle" font-size="11" fill="#5b6876">3D 모델 (11차시)</text></g>
+        <line x1="214" y1="95" x2="282" y2="95" stroke="#00879E" stroke-width="3" marker-end="url(#ah)"/>
+        <rect x="140" y="215" width="180" height="50" rx="10" fill="#0F3057"/><text x="230" y="238" text-anchor="middle" font-size="14" font-weight="700" fill="#FFC145">CNC·CAM 가공</text><text x="230" y="256" text-anchor="middle" font-size="12" fill="#fff">Ⅲ단원</text>
+        <line x1="115" y1="164" x2="160" y2="212" stroke="#5b6876" stroke-width="2" marker-end="url(#ahn)"/><line x1="350" y1="180" x2="300" y2="212" stroke="#5b6876" stroke-width="2" marker-end="url(#ahn)"/>
+      </svg></div>
+      <div class="analogy"><b class="lab">비유</b>악보를 읽지 못하면 연주할 수 없듯이, 도면을 읽지 못하면 가공할 수 없다. 선의 굵기는 '음표의 길이', 치수와 공차는 '음의 높이'처럼 정해진 약속이다.</div>
+    </div>
+  </div>
+  <div class="oneline"><b>목표</b>KS 제도 규칙에 따라 도면을 해독하고, 공차·거칠기·기하공차의 뜻을 설명하며, 3D 모델링 명령을 구분할 수 있다.</div>
+  
+</section>
+
+<!-- 7차시 표지 -->
+<section class="page sec-cover" data-title="7차시 · 도면의 종류, 선, 보조기호">
+  <div class="num">7</div>
+  <h1>도면의 종류, 선의 종류, 치수 보조기호</h1>
+  <div class="sub">용도에 따른 도면의 종류 / 제도 관련 KS 규격<br>모양·용도에 따른 선의 종류 / 선이 겹칠 때의 우선순위 / 치수 보조기호</div>
+  
+</section>
+
+<!-- 도면의 종류 -->
+<section class="page" data-title="도면의 종류와 제도 규격">
+  <div class="kicker"><span class="lesson">7차시</span>도면의 종류 <span class="pg">보충 Ⅱ-1</span></div>
+  <h2>누가, 무엇에 쓰는 도면인가 — 용도에 따른 도면의 종류</h2>
+  <div class="cols c64">
+    <div class="col">
+      <div class="wbox"><svg viewBox="0 0 640 230">
+        <g font-size="13.5" text-anchor="middle" font-weight="700">
+          <rect x="10" y="20" width="110" height="50" rx="8" fill="#fff4d6" stroke="#FFC145" stroke-width="2"/><text x="65" y="42" fill="#0F3057">주문도</text><text x="65" y="60" font-size="11" font-weight="400" fill="#5b6876">고객 → 회사</text>
+          <rect x="140" y="20" width="110" height="50" rx="8" fill="#e6ecf3" stroke="#0F3057" stroke-width="2"/><text x="195" y="42" fill="#0F3057">견적도</text><text x="195" y="60" font-size="11" font-weight="400" fill="#5b6876">회사 → 고객</text>
+          <rect x="270" y="20" width="110" height="50" rx="8" fill="#e6ecf3" stroke="#0F3057" stroke-width="2"/><text x="325" y="42" fill="#0F3057">계획도</text><text x="325" y="60" font-size="11" font-weight="400" fill="#5b6876">설계 구상</text>
+          <rect x="400" y="20" width="110" height="50" rx="8" fill="#e2f3f5" stroke="#00879E" stroke-width="2"/><text x="455" y="42" fill="#0F3057">승인도</text><text x="455" y="60" font-size="11" font-weight="400" fill="#5b6876">고객이 확인·승인</text>
+          <rect x="530" y="20" width="100" height="50" rx="8" fill="#00879E"/><text x="580" y="42" fill="#fff">제작도</text><text x="580" y="60" font-size="11" font-weight="400" fill="#e2f3f5">부품도·조립도</text>
+        </g>
+        <g stroke="#00879E" stroke-width="2.5" marker-end="url(#ah)"><line x1="122" y1="45" x2="136" y2="45"/><line x1="252" y1="45" x2="266" y2="45"/><line x1="382" y1="45" x2="396" y2="45"/><line x1="512" y1="45" x2="526" y2="45"/></g>
+        <text x="320" y="100" text-anchor="middle" font-size="13" fill="#5b6876">주문 → 견적 → 설계 → 승인 → 제작의 흐름으로 보면 기억하기 쉽다</text>
+        <rect x="200" y="120" width="240" height="44" rx="8" fill="#fff" stroke="#5b6876" stroke-dasharray="5 4"/>
+        <text x="320" y="139" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0F3057">설명도</text><text x="320" y="156" text-anchor="middle" font-size="11.5" fill="#5b6876">구조·기능·사용법을 설명(카탈로그·사용설명서)</text>
+        <text x="320" y="200" text-anchor="middle" font-size="12.5" fill="#c8423b" font-weight="700">주문도: 고객이 사양·주문 개요를 첨부하여 기능·치수·형상 등 요구 조건을 제시한 도면</text>
+      </svg></div>
+      <div class="analogy"><b class="lab">비유</b>집을 짓는 과정에 빗대어 보자. 집주인이 원하는 집을 적어 주면 <b>주문도</b>, 건설사가 "이 정도면 얼마"라고 내미는 것이 <b>견적도</b>, 집주인이 "이대로 지으라"고 서명한 것이 <b>승인도</b>, 현장 목수가 보고 짓는 것이 <b>제작도</b>이다.</div>
+    </div>
+    <div class="col">
+      <div class="supp"><b class="lab">보충</b>제도 관련 KS 규격 <span class="gq tonly">기출 1-5</span></div>
+      <table class="t" style="font-size:15px">
+        <tr><th>규격 번호</th><th>내용</th></tr>
+        <tr><td class="c">KS B 0001</td><td>기계 제도</td></tr>
+        <tr><td class="c">KS B 0002</td><td>제도 – 기어의 표시</td></tr>
+        <tr><td class="c">KS B 0004</td><td>제도 – 구름 베어링</td></tr>
+        <tr><td class="c">KS B 0005</td><td>제도 – 스프링의 표시</td></tr>
+        <tr><td class="c">KS B 0052</td><td>용접 기호</td></tr>
+      </table>
+      <div class="word"><b>낱말 풀이</b> KS는 한국산업표준(Korean Industrial Standards), B는 <b>기계</b> 부문을 뜻한다. A는 기본, D는 금속, C는 전기 부문이다.</div>
+      <div class="box gd"><h4>외우는 법</h4><p class="mini">0002 <b>기</b>어(2개가 맞물림) → 0004 <b>구</b>름 베어링 → 0005 <b>스</b>프링 → 0052 <b>용</b>접. "기·구·스·용"</p></div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 선의 종류 위젯 -->
+<section class="page" data-title="선의 종류와 용도 (움직이는 그림)">
+  <div class="kicker"><span class="lesson">7차시</span>선의 종류 <span class="pg">교재 8쪽 1)·2)</span></div>
+  <h2>굵기와 모양이 곧 뜻이다 — 선의 종류와 용도</h2>
+  <div class="cols c64">
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-lines" viewBox="0 0 620 300"></svg>
+        <div class="ctrl" id="ln-btns"><button data-ln="out" class="on">외형선</button><button data-ln="hid">숨은선</button><button data-ln="cen">중심선</button><button data-ln="dim">치수선·치수보조선</button><button data-ln="lead">지시선</button><button data-ln="pha">가상선</button><button data-ln="brk">파단선</button><button data-ln="hat">해칭</button></div>
+        <div class="readout" id="ln-out"></div>
+      </div>
+    </div>
+    <div class="col" style="gap:7px">
+      <table class="t" style="font-size:14px">
+        <tr><th>모양</th><th>굵기</th><th>주요 용도</th></tr>
+        <tr><td>실선 ───</td><td class="c">굵은</td><td><b>외형선</b></td></tr>
+        <tr><td>실선 ───</td><td class="c">가는</td><td><b>치수선·치수보조선·지시선·해칭</b>, 회전 단면선</td></tr>
+        <tr><td>파선 - - -</td><td class="c">가는/굵은</td><td><b>숨은선</b></td></tr>
+        <tr><td>1점 쇄선 ─·─</td><td class="c">가는</td><td><b>중심선</b>, 피치선</td></tr>
+        <tr><td>2점 쇄선 ─··─</td><td class="c">가는</td><td><b>가상선</b>(인접 부품, 이동 위치, 가공 전후)</td></tr>
+        <tr><td>불규칙 실선 ∿</td><td class="c">가는</td><td><b>파단선</b></td></tr>
+        <tr><td>1점 쇄선+끝 굵게</td><td class="c">가는</td><td><b>절단선</b></td></tr>
+      </table>
+      <div class="analogy"><b class="lab">비유</b>지도에서 굵은 선은 고속도로, 가는 선은 골목, 점선은 지하 터널이다. 도면도 굵은 실선은 '눈에 보이는 윤곽', 가는 선은 '설명용', 파선은 '보이지 않는 속'이다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 선 우선순위 + 활동 -->
+<section class="page" data-title="활동 · 선의 짝 맞추기와 우선순위">
+  <div class="kicker"><span class="lesson">7차시</span>확인 활동 <span class="pg">교재 8쪽 · 보충</span></div>
+  <h2>이 선은 어떤 모양으로 그리는가</h2>
+  <div class="cols c64">
+    <div class="col">
+      <div class="ctrl" style="font-size:16px">선의 모양을 고르고 → 선 이름을 누른다:
+        <span class="sp"></span><button data-lt="1" class="on">굵은 실선</button><button data-lt="2">가는 실선</button><button data-lt="3">가는 1점 쇄선·파선 등</button></div>
+      <div class="sortq" id="sort7" style="margin-top:6px">
+        <button data-c="1">외형선</button><button data-c="2">치수선</button><button data-c="2">치수보조선</button><button data-c="2">지시선</button>
+        <button data-c="3">중심선</button><button data-c="3">숨은선</button><button data-c="2">해칭</button><button data-c="3">가상선</button>
+        <button data-c="3">피치선</button><button data-c="2">회전 단면선</button><button data-c="2">파단선(불규칙한 가는 실선)</button>
+      </div>
+      <div class="ctrl" style="margin-top:8px"><button id="sort7-chk">채점하기</button><button id="sort7-rst">다시 하기</button><span class="readout" id="sort7-out" style="margin-left:10px"></span></div>
+      <div class="legend"><span><i style="background:#00879E"></i>굵은 실선</span><span><i style="background:#FFC145"></i>가는 실선</span><span><i style="background:#0F3057"></i>쇄선·파선</span><span><i style="background:#fbe3e1;border:1px solid #c8423b"></i>틀림</span></div>
+    </div>
+    <div class="col">
+      <div class="supp"><b class="lab">보충</b>선이 겹칠 때의 우선순위</div>
+      <div class="flow">
+        <div class="st"><b>① 외형선</b></div><div class="ar">▼</div>
+        <div class="st">② 숨은선</div><div class="ar">▼</div>
+        <div class="st">③ 절단선</div><div class="ar">▼</div>
+        <div class="st">④ 중심선</div><div class="ar">▼</div>
+        <div class="st">⑤ 무게 중심선</div><div class="ar">▼</div>
+        <div class="st">⑥ 치수 보조선</div>
+      </div>
+      <div class="analogy" style="font-size:15.5px"><b class="lab">비유</b>같은 자리에 두 선이 겹치면 '더 중요한 선'만 그린다. 보이는 윤곽이 가장 중요하고, 설명용 선은 양보한다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 보조기호 -->
+<section class="page" data-title="치수 보조기호 (움직이는 그림)">
+  <div class="kicker"><span class="lesson">7차시</span>치수 보조기호 <span class="pg">교재 8쪽 3) · 보충 Ⅱ-1 6)</span></div>
+  <h2>숫자 앞의 작은 기호가 모양을 알려 준다 — 치수 보조기호</h2>
+  <div class="cols c46">
+    <div class="col" style="gap:8px">
+      <table class="t" style="font-size:15px">
+        <tr><th>기호</th><th>뜻</th><th>읽는 법</th></tr>
+        <tr><td class="c"><b>∅</b></td><td>지름</td><td>파이</td></tr>
+        <tr><td class="c"><b>R</b></td><td>반지름</td><td>알</td></tr>
+        <tr><td class="c"><b>□</b></td><td>정사각형의 변</td><td>사각</td></tr>
+        <tr><td class="c"><b>C</b></td><td>45° 모따기</td><td>시</td></tr>
+        <tr><td class="c"><b>t</b></td><td>판의 두께</td><td>티</td></tr>
+        <tr><td class="c"><b>S∅ · SR</b></td><td>구의 지름 · 구의 반지름</td><td>에스파이 · 에스알</td></tr>
+        <tr><td class="c"><b>⌒</b></td><td>원호의 길이</td><td>원호</td></tr>
+        <tr><td class="c"><b>( )</b></td><td>참고 치수</td><td>괄호</td></tr>
+      </table>
+    </div>
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-sym" viewBox="0 0 560 250"></svg>
+        <div class="ctrl"><button data-sy="phi" class="on">∅</button><button data-sy="r">R</button><button data-sy="sq">□</button><button data-sy="c">C</button><button data-sy="t">t</button><button data-sy="sr">SR</button><button data-sy="ref">( )</button></div>
+        <div class="readout" id="sym-out"></div>
+      </div>
+      <div class="analogy"><b class="lab">비유</b>'∅20'과 '□20'은 숫자가 같아도 하나는 둥근 축, 하나는 각진 막대이다. 기호는 숫자의 '성(姓)'과 같아서, 빼먹으면 전혀 다른 부품이 된다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 7차시 확인 -->
+<section class="page" data-title="7차시 확인 문제">
+  <div class="kicker"><span class="lesson">7차시</span>확인 문제 <span class="pg">기출 연계</span></div>
+  <h2>7차시 확인 문제</h2>
+  <div class="quiz">
+    <div class="q">1. 고객이 주문 개요를 첨부하여 기능·치수·형상 등 요구 조건을 제시한 도면은? <span class="gq tonly">기출 2-7</span><br>① 제작도 ② 계획도 ③ 주문도 ④ 승인도
+      <div class="ox" data-a="3" data-e="주문도는 고객(주문자)이 요구 조건을 적어 회사에 보내는 도면이다. 승인도는 고객이 확인·승인한 도면, 제작도는 실제 만들 때 쓰는 도면이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">2. 45° 모따기를 나타내는 기호는? <span class="gq tonly">기출 2-6</span><br>① R ② SR ③ S ④ C
+      <div class="ox" data-a="4" data-e="C는 45° 모따기(Chamfer)이다. R은 반지름, SR은 구의 반지름, S는 단독으로 쓰지 않는다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">3. 가는 실선을 사용하는 선으로 옳은 것은? <span class="gq tonly">교재 5회 8</span><br>① 외형선 ② 지시선 ③ 숨은선 ④ 가상선
+      <div class="ox" data-a="2" data-e="지시선은 가는 실선으로 그린다. 외형선은 굵은 실선, 숨은선은 파선, 가상선은 가는 2점 쇄선이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">4. 중심선은 가는 2점 쇄선으로 그린다.
+      <div class="ox" data-a="2" data-e="중심선은 가는 1점 쇄선으로 그린다. 가는 2점 쇄선은 가상선이다. 그래서 X이다."><button>O</button><button>X</button></div><div class="fb"></div></div>
+    <div class="q">5. KS B 0004의 내용은? <span class="gq tonly">기출 1-5</span><br>① 기어의 표시 ② 구름 베어링 ③ 스프링의 표시 ④ 용접 기호
+      <div class="ox" data-a="2" data-e="KS B 0004는 구름 베어링 제도이다. 0002는 기어, 0005는 스프링, 0052는 용접 기호이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">6. 도면에서 참고 치수를 나타낼 때 숫자에 붙이는 기호는? <span class="gq tonly">학생 기출</span>
+      <button>정답 보기</button><div class="ans">괄호 ( ) — 다른 치수로 알 수 있는 치수를 참고로 보일 때 숫자를 괄호로 묶는다. 예) (40)</div></div>
+  </div>
+  <div class="oneline" style="margin-top:auto"><b>정리</b>굵은 실선 = 외형선 · 가는 실선 = 치수·지시·해칭 · 1점 쇄선 = 중심 · 2점 쇄선 = 가상 · 파선 = 숨은선</div>
+  
+</section>
+
+<!-- 8차시 표지 -->
+<section class="page sec-cover" data-title="8차시 · 치수 기입과 베어링 호칭">
+  <div class="num">8</div>
+  <h1>치수 기입과 베어링 호칭 번호</h1>
+  <div class="sub">치수 기입 방법(직렬·병렬·누진·좌표)과 공차의 누적<br>치수 기입의 원칙 / 베어링 호칭 번호 읽기</div>
+  
+</section>
+
+<!-- 치수 기입 방법 -->
+<section class="page" data-title="치수 기입 방법 4가지 (움직이는 그림)">
+  <div class="kicker"><span class="lesson">8차시</span>치수 기입 방법 <span class="pg">보충 Ⅱ-1 4)</span></div>
+  <h2>같은 구멍 4개, 치수를 넣는 방법은 4가지</h2>
+  <div class="cols c64">
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-dimm" viewBox="0 0 620 290"></svg>
+        <div class="ctrl"><button data-dm="ser" class="on">직렬</button><button data-dm="par">병렬</button><button data-dm="cum">누진</button><button data-dm="crd">좌표</button><span class="sp"></span><button id="dm-tol">공차 누적 보기</button></div>
+        <div class="readout" id="dm-out"></div>
+      </div>
+    </div>
+    <div class="col" style="gap:7px">
+      <div class="box"><h4>직렬 치수 기입</h4><p class="mini">치수를 <b>한 줄로 이어서</b> 기입. 공차가 <b>누적</b>되어도 괜찮을 때 쓴다.</p></div>
+      <div class="box hl"><h4>병렬 치수 기입</h4><p class="mini"><b>한 기준면</b>에서 각각 따로 기입. 공차가 누적되지 않는다.</p></div>
+      <div class="box"><h4>누진 치수 기입</h4><p class="mini">한 기준점에서 <b>하나의 연속된 치수선</b>으로 기입하고 끝에 누적값을 쓴다(병렬과 같은 효과, 공간 절약).</p></div>
+      <div class="box gd"><h4>좌표 치수 기입</h4><p class="mini">구멍 위치를 기준점에서의 <b>X·Y 좌표값 표</b>로 나타낸다. CNC 프로그램과 잘 맞는다.</p></div>
+    </div>
+  </div>
+  <div class="analogy"><b class="lab">비유</b>집에서 학교까지 길을 알려 줄 때 "편의점에서 100 m, 거기서 은행까지 200 m…"처럼 이어서 말하면 <b>직렬</b>, "집에서 편의점 100 m, 집에서 은행 300 m…"처럼 늘 집을 기준으로 말하면 <b>병렬</b>이다. 이어서 말하면 한 번 틀린 거리가 다음 거리에 그대로 쌓인다.</div>
+  
+</section>
+
+<!-- 치수 기입 원칙 -->
+<section class="page" data-title="치수 기입의 원칙 (O·X 활동)">
+  <div class="kicker"><span class="lesson">8차시</span>치수 기입의 원칙 <span class="pg">보충 Ⅱ-1 5)</span></div>
+  <h2>좋은 도면은 '필요하고 충분한' 치수만 가진다</h2>
+  <div class="cols">
+    <div class="col">
+      <div class="steps">
+        <div>치수는 <b>정면도(주투상도)</b>에 될 수 있는 대로 집중하여 기입한다.</div>
+        <div>도형의 모양을 명확하게 나타내는 데 <b>필요하고 충분한</b> 치수만 기입한다.</div>
+        <div><b>중복 기입을 피하고</b>, 계산하지 않아도 알 수 있게 기입한다.</div>
+        <div>기능상 필요한 치수는 <b>기준면</b>을 기준으로 기입한다.</div>
+        <div>치수 숫자는 <b>선에 겹치지 않게</b> 기입한다.</div>
+        <div class="hl">참고 치수는 숫자에 <b>괄호 ( )</b>를 붙인다.</div>
+      </div>
+      <div class="analogy"><b class="lab">비유</b>요리법에 "소금 5 g"을 두 군데 적어 두었는데 한 곳만 고치면 어느 것이 맞는지 헷갈린다. 치수를 중복으로 쓰지 않는 까닭이 같다.</div>
+    </div>
+    <div class="col">
+      <div class="card"><h3>O·X로 확인하기</h3>
+        <div class="q">① 치수는 평면도에 될 수 있는 대로 집중하여 기입한다.<div class="ox" data-a="2" data-e="치수는 평면도가 아니라 정면도(주투상도)에 될 수 있는 대로 집중하여 기입한다. 그래서 X이다."><button>O</button><button>X</button></div><div class="fb"></div></div>
+        <div class="q">② 같은 치수를 정면도와 측면도에 함께 써 두면 더 친절한 도면이다.<div class="ox" data-a="2" data-e="같은 치수를 두 곳에 쓰면 한 곳만 고쳤을 때 어느 값이 맞는지 헷갈린다. 중복 기입은 피한다. 그래서 X이다."><button>O</button><button>X</button></div><div class="fb"></div></div>
+        <div class="q">③ 치수 숫자는 치수선이나 외형선에 겹치지 않게 쓴다.<div class="ox" data-a="1" data-e="치수 숫자가 선과 겹치면 읽기 어려우므로 겹치지 않게 쓴다. 그래서 O이다."><button>O</button><button>X</button></div><div class="fb"></div></div>
+        <div class="q">④ 전체 길이에서 계산되는 치수는 괄호를 붙여 참고로 쓸 수 있다.<div class="ox" data-a="1" data-e="다른 치수로 계산되는 치수는 중복이 되지 않도록 괄호를 붙여 참고 치수로 쓴다. 그래서 O이다."><button>O</button><button>X</button></div><div class="fb"></div></div>
+        <div class="q">⑤ 기능상 중요한 치수는 기준면에서 기입한다.<div class="ox" data-a="1" data-e="기능상 중요한 치수는 기준면에서 기입해야 다른 치수의 오차가 쌓이지 않는다. 그래서 O이다."><button>O</button><button>X</button></div><div class="fb"></div></div>
+      </div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 베어링 -->
+<section class="page" data-title="베어링 호칭 번호 읽기 (움직이는 그림)">
+  <div class="kicker"><span class="lesson">8차시</span>베어링 호칭 번호 <span class="pg">교재 9쪽 7)</span></div>
+  <h2>호칭 번호로 베어링의 안지름을 안다</h2>
+  <div class="cols c46">
+    <div class="col" style="gap:8px">
+      <div class="card t"><p class="mini">베어링은 <b>호칭 번호</b>로 안지름(d), 바깥지름(D), 폭(B), 모서리 모따기 치수의 최소값(r)이 정해진다. 예) <b>6205</b> → 앞 두 자리 <b>62</b>(베어링 형식·치수 계열), 뒤 두 자리 <b>05</b>(안지름 번호).<br><span class="chk">교재 바로잡기</span> 교재 9쪽은 r을 '최소 허용 치수'로만 적었다. r은 내륜·외륜 <b>모서리 모따기 치수의 최소값</b>이다.</p></div>
+      <table class="t" style="font-size:15px">
+        <tr><th>안지름 번호</th><th>안지름 d</th></tr>
+        <tr><td class="c">00 / 01 / 02 / 03</td><td class="c"><b>10 / 12 / 15 / 17 mm</b> (외워야 한다)</td></tr>
+        <tr><td class="c">04 이상</td><td class="c">번호 × <b>5</b> (04 → 20 mm, 05 → 25 mm)</td></tr>
+        <tr><td class="c">/22, /28 처럼 '/' 뒤</td><td class="c">숫자 그대로 mm (62/22 → 22 mm)</td></tr>
+      </table>
+      <div class="analogy"><b class="lab">비유</b>신발 치수가 230, 240처럼 5 mm 간격인 것과 비슷하다. 베어링도 20 mm부터는 '번호 × 5'로 5 mm 간격이다. 다만 작은 치수(10·12·15·17)는 따로 외운다.</div>
+    </div>
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-brg" viewBox="0 0 560 250"></svg>
+        <div class="ctrl">호칭 번호 <button data-bn="6200">6200</button><button data-bn="6201">6201</button><button data-bn="6202">6202</button><button data-bn="6203">6203</button><button data-bn="6204">6204</button><button data-bn="6205" class="on">6205</button><button data-bn="62/22">62/22</button><button data-bn="6210">6210</button></div>
+        <div class="readout" id="brg-out"></div>
+      </div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 8차시 확인 -->
+<section class="page" data-title="8차시 확인 문제">
+  <div class="kicker"><span class="lesson">8차시</span>확인 문제 <span class="pg">기출 연계</span></div>
+  <h2>8차시 확인 문제</h2>
+  <div class="quiz">
+    <div class="q">1. 치수 기입 시 주의 사항으로 옳지 않은 것은? <span class="gq tonly">기출 3-6</span><br>① 치수는 평면도에 집중하여 표기한다 ② 필요하고 충분한 것을 표기한다 ③ 중복 기입을 피한다 ④ 치수 숫자는 선에 겹치지 않는다
+      <div class="ox" data-a="1" data-e="치수는 평면도가 아니라 정면도(주투상도)에 집중하여 기입한다. 나머지 셋은 모두 바른 원칙이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">2. 베어링 호칭 번호가 6205일 때 안지름[mm]은? <span class="gq tonly">기출 3-14</span><br>① 5 ② 20 ③ 25 ④ 62
+      <div class="ox" data-a="3" data-e="안지름 번호 04 이상은 번호 × 5이다. 6205의 05 → 5 × 5 = 25 mm이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">3. 한 기준면에서 각 치수를 따로 기입하여 공차가 누적되지 않는 치수 기입 방법은? <span class="gq tonly">기출 3-3</span><br>① 직렬 ② 병렬 ③ 누진 ④ 좌표
+      <div class="ox" data-a="2" data-e="병렬 치수 기입은 모든 치수를 한 기준면에서 따로 넣으므로 공차가 누적되지 않는다. 직렬은 공차가 누적된다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">4. 베어링 6202의 안지름[mm]은?<br>① 10 ② 12 ③ 15 ④ 17
+      <div class="ox" data-a="3" data-e="안지름 번호 00·01·02·03은 각각 10·12·15·17 mm로 외운다. 6202의 02 → 15 mm이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">5. 구멍 위치를 기준점에서의 X·Y 값 표로 나타내는 치수 기입 방법은?
+      <button>정답 보기</button><div class="ans">좌표 치수 기입 — 기준점에서의 X·Y 값을 표로 주므로 CNC 프로그램 좌표와 바로 연결된다.</div></div>
+    <div class="q">6. 직렬 치수 4개가 각각 ±0.05일 때 마지막 위치의 최대 누적 오차는?
+      <button>정답 보기</button><div class="ans">±0.2 mm (0.05 × 4)</div></div>
+  </div>
+  <div class="oneline" style="margin-top:auto"><b>정리</b>직렬 = 누적, 병렬·누진 = 기준면 하나, 좌표 = 표 · 치수는 정면도에, 중복 없이 · 베어링 04부터 × 5</div>
+  
+</section>
+
+<!-- 9차시 표지 -->
+<section class="page sec-cover" data-title="9차시 · 치수 공차, 끼워맞춤, IT 등급">
+  <div class="num">9</div>
+  <h1>치수 공차, 끼워맞춤, IT 등급</h1>
+  <div class="sub">치수 용어(기준·허용 한계·치수 허용차·공차) / 헐거운·중간·억지 끼워맞춤<br>틈새와 죔새 계산 / 구멍 기준식 H7 / IT 기본 공차 20등급</div>
+  
+</section>
+
+<!-- 치수 공차 -->
+<section class="page" data-title="치수 공차 용어 (움직이는 그림)">
+  <div class="kicker"><span class="lesson">9차시</span>치수 공차 <span class="pg">보충 Ⅱ-1 2)</span></div>
+  <h2>완벽한 20 mm는 없다 — 허용되는 범위, 공차</h2>
+  <div class="cols c46">
+    <div class="col" style="gap:7px">
+      <div class="box"><h4>실제 치수</h4><p class="mini">실제로 측정한 치수</p></div>
+      <div class="box"><h4>기준 치수(호칭 치수)</h4><p class="mini">허용 한계 치수의 <b>기준</b>이 되는 치수 (예: ∅20)</p></div>
+      <div class="box"><h4>허용 한계 치수</h4><p class="mini">허용되는 크고 작은 <b>극한의 치수</b> — 최대 허용 치수, 최소 허용 치수</p></div>
+      <div class="box hl"><h4>치수 허용차</h4><p class="mini">위 치수 허용차 = 최대 허용 치수 − 기준 치수<br>아래 치수 허용차 = 최소 허용 치수 − 기준 치수</p></div>
+      <div class="box gd"><h4>치수 공차(공차)</h4><p class="mini"><b>최대 허용 치수 − 최소 허용 치수</b> = 위 치수 허용차 − 아래 치수 허용차</p></div>
+    </div>
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-tol" viewBox="0 0 560 240"></svg>
+        <div class="ctrl">위 치수 허용차 <input type="range" id="tl-u" min="-0.05" max="0.06" step="0.001" value="0.021"></div>
+        <div class="ctrl">아래 치수 허용차 <input type="range" id="tl-l" min="-0.06" max="0.05" step="0.001" value="0"></div>
+        <div class="readout" id="tl-out"></div>
+      </div>
+      <div class="analogy"><b class="lab">비유</b>택배 상자 규격이 "가로 30 cm, ±1 cm까지 허용"이라면 29~31 cm는 모두 합격이다. 이 허용 폭 2 cm가 <b>공차</b>이고, 29와 31이 <b>허용 한계 치수</b>이다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 끼워맞춤 -->
+<section class="page" data-title="끼워맞춤의 종류 (움직이는 그림)">
+  <div class="kicker"><span class="lesson">9차시</span>끼워맞춤 <span class="pg">교재 8쪽 4)</span></div>
+  <h2>헐겁게, 적당히, 억지로 — 구멍과 축의 끼워맞춤</h2>
+  <div class="cols c46">
+    <div class="col" style="gap:7px">
+      <div class="box hl"><h4>① 헐거운 끼워맞춤</h4><p class="mini">항상 <b>틈새</b>가 있다. 구멍의 최소 치수 > 축의 최대 치수. 힘 없이 분해된다.<br>최소 틈새 = 구멍 최소 − 축 최대 / 최대 틈새 = 구멍 최대 − 축 최소</p></div>
+      <div class="box"><h4>② 중간 끼워맞춤</h4><p class="mini">틈새가 생길 수도, 죔새가 생길 수도 있다. 정밀한 위치 결정이 필요한 조립(기어·풀리와 축 등)에 쓴다.</p></div>
+      <div class="box gd"><h4>③ 억지 끼워맞춤</h4><p class="mini">항상 <b>죔새</b>가 있다. 축의 최소 치수 > 구멍의 최대 치수. 압입하거나 가열·냉각하여 조립하며, 분해가 매우 어렵고 분해하면 손상될 수 있다.<br>최대 죔새 = 축 최대 − 구멍 최소 / 최소 죔새 = 축 최소 − 구멍 최대</p></div>
+    </div>
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-fit" viewBox="0 0 560 260"></svg>
+        <div class="ctrl">구멍 ∅20 <b style="color:var(--navy)">H7</b> · 축 <button data-ft="g6" class="on">g6</button><button data-ft="h6">h6</button><button data-ft="k6">k6</button><button data-ft="m6">m6</button><button data-ft="p6">p6</button><button data-ft="s6">s6</button><span class="sp"></span><button data-play class="on">정지</button></div>
+        <div class="readout" id="fit-out"></div>
+      </div>
+      <div class="analogy"><b class="lab">비유</b>헐거운 끼워맞춤은 헐렁한 반지, 억지 끼워맞춤은 손가락보다 작은 반지를 비누 없이는 끼울 수 없는 상태이다. 억지로 끼운 반지는 빼기가 매우 어렵다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 구멍기준식 -->
+<section class="page" data-title="구멍 기준식과 기호 읽기">
+  <div class="kicker"><span class="lesson">9차시</span>구멍 기준식 <span class="pg">보충 Ⅱ-1 · 학생 기출</span></div>
+  <h2>H7/g6를 읽는 법 — 대문자는 구멍, 소문자는 축</h2>
+  <div class="cols">
+    <div class="col">
+      <div class="card t"><p><b>∅20 H7/g6</b> → 기준 치수 <b>20</b>, 구멍 공차역 <b>H</b> · 등급 <b>7</b>, 축 공차역 <b>g</b> · 등급 <b>6</b></p>
+        <p class="mini">· <b>대문자</b>(H, G, …) = 구멍 / <b>소문자</b>(h, g, …) = 축<br>· 숫자 = IT 공차 등급(작을수록 정밀)<br>· <b>H</b> 구멍은 아래 치수 허용차가 0, <b>h</b> 축은 위 치수 허용차가 0</p></div>
+      <div class="box hl"><h4>구멍 기준식 (H 구멍을 기준으로 축을 바꾼다)</h4><p class="mini">구멍은 리머 등 정해진 공구로 가공하므로 <b>구멍을 H로 고정</b>하고 축의 공차역만 바꾸어 끼워맞춤을 정한다. 실제로 가장 많이 쓴다.<br>축 기준식은 반대로 <b>h 축</b>을 기준으로 구멍을 바꾼다.</p></div>
+      <div class="analogy"><b class="lab">비유</b>문틀(구멍)은 한 번 만들면 바꾸기 어렵고, 문짝(축)은 깎아 맞추기 쉽다. 그래서 문틀을 표준으로 두고 문짝을 맞추는 것이 구멍 기준식이다.</div>
+    </div>
+    <div class="col">
+      <table class="t" style="font-size:15px">
+        <tr><th>H7 구멍과 짝지은 축</th><th>끼워맞춤</th><th>쓰임 예</th></tr>
+        <tr><td class="c">f7, g6, h6</td><td class="c"><span class="tag">헐거운</span></td><td>회전축과 미끄럼 베어링, 슬라이드 부품</td></tr>
+        <tr><td class="c">js6, k6, m6, n6</td><td class="c"><span class="tag n">중간</span></td><td>기어·풀리와 축, 위치 결정 핀</td></tr>
+        <tr><td class="c">p6, r6, s6</td><td class="c"><span class="tag g">억지</span></td><td>부시 압입, 영구 결합</td></tr>
+      </table>
+      <div class="box gd" style="margin-top:10px"><h4>계산 연습 [기출 3-40 유형]</h4><p class="mini">구멍 ∅40.00~∅40.02, 축 ∅40.03~∅40.04일 때<br>최대 죔새 = 축 최대 − 구멍 최소 = 40.04 − 40.00 = <b>0.04 mm</b><br>최소 죔새 = 축 최소 − 구멍 최대 = 40.03 − 40.02 = <b>0.01 mm</b> → 항상 죔새이므로 억지 끼워맞춤</p></div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- IT 등급 -->
+<section class="page" data-title="IT 기본 공차 20등급 (그래프)">
+  <div class="kicker"><span class="lesson">9차시</span>IT 기본 공차 <span class="pg">보충 Ⅱ-1 3)</span></div>
+  <h2>숫자가 클수록 공차가 크다 — IT 기본 공차 20등급</h2>
+  <div class="cols c64">
+    <div class="col">
+      <div class="wbox"><svg id="w-it" viewBox="0 0 640 280"></svg>
+        <div class="readout" id="it-out"></div></div>
+    </div>
+    <div class="col" style="gap:8px">
+      <div class="formula" style="font-size:20px">IT01, IT0, IT1 ~ IT18<br>= 20등급</div>
+      <table class="t" style="font-size:15px">
+        <tr><th>등급</th><th>용도</th></tr>
+        <tr><td class="c">IT01 ~ IT4</td><td><b>게이지류</b>(게이지 블록, 한계 게이지)</td></tr>
+        <tr><td class="c">IT5 ~ IT10</td><td><b>끼워맞춤</b> 부분</td></tr>
+        <tr><td class="c">IT11 ~ IT18</td><td>끼워맞춤 이외 부분(거친 가공)</td></tr>
+      </table>
+      <div class="analogy"><b class="lab">비유</b>시험 등급과 반대로, IT는 <b>숫자가 작을수록 '엄격'</b>하다. IT01은 머리카락 굵기의 수백분의 1, IT18은 몇 mm까지 허용한다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 9차시 확인 -->
+<section class="page" data-title="9차시 확인 문제">
+  <div class="kicker"><span class="lesson">9차시</span>확인 문제 <span class="pg">기출 연계</span></div>
+  <h2>9차시 확인 문제</h2>
+  <div class="quiz">
+    <div class="q">1. 최대 허용 치수와 최소 허용 치수의 차를 무엇이라 하는가? <span class="gq tonly">기출 2-16</span><br>① 기준 치수 ② 치수 범위 ③ 한계 치수 ④ 공차
+      <div class="ox" data-a="4" data-e="공차(치수 공차)는 최대 허용 치수 − 최소 허용 치수이다. 위 치수 허용차 − 아래 치수 허용차와 같다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">2. 구멍이 크고 축이 헐겁게 끼워질 때 그 치수 차는? <span class="gq tonly">기출 3-8</span><br>① 공차 ② 간격 ③ 틈새 ④ 죔새
+      <div class="ox" data-a="3" data-e="구멍이 축보다 커서 생기는 치수 차는 틈새이다. 축이 구멍보다 커서 생기는 차는 죔새이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">3. 축의 최소 치수가 구멍의 최대 치수보다 커서 항상 죔새가 생기는 끼워맞춤은? <span class="gq tonly">기출 3-9</span><br>① 중간 ② 억지 ③ 헐거운 ④ 영구적
+      <div class="ox" data-a="2" data-e="축의 최소 치수가 구멍의 최대 치수보다 크면 항상 죔새가 생기는 억지 끼워맞춤이다. 기출 원문은 &#x27;분해가 영구적으로 불가능한&#x27;이라고 했지만, 실제로는 분해가 매우 어렵고 손상될 수 있다는 뜻으로 이해한다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">4. ISO 규격의 IT 공차는 총 몇 등급인가? <span class="gq tonly">기출 3-7</span><br>① 18 ② 19 ③ 20 ④ 21
+      <div class="ox" data-a="3" data-e="IT 기본 공차는 IT01, IT0, IT1~IT18로 모두 20등급이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">5. H7/g6는 구멍 기준식 헐거운 끼워맞춤이다. <span class="gq tonly">학생 기출</span>
+      <div class="ox" data-a="1" data-e="H7은 기준 구멍(아래 치수 허용차 0)이고, g6 축은 항상 기준 치수보다 작아 틈새가 생긴다. 그래서 구멍 기준식 헐거운 끼워맞춤이고 O이다."><button>O</button><button>X</button></div><div class="fb"></div></div>
+    <div class="q">6. 구멍 ∅30.000~30.021, 축 ∅30.035~30.048일 때 최대 죔새[mm]는?
+      <button>정답 보기</button><div class="ans">30.048 − 30.000 = 0.048 mm</div></div>
+  </div>
+  <div class="oneline" style="margin-top:auto"><b>정리</b>공차 = 최대 − 최소 · 틈새는 헐거운, 죔새는 억지 · 대문자 구멍·소문자 축 · IT 20등급(01·0·1~18)</div>
+  
+</section>
+
+<!-- 10차시 표지 -->
+<section class="page sec-cover" data-title="10차시 · 표면 거칠기, 가공 기호, 기하공차">
+  <div class="num">10</div>
+  <h1>표면 거칠기, 가공 방법 기호, 기하공차</h1>
+  <div class="sub">산술 평균 거칠기 Ra · 최대 높이 Ry · 10점 평균 거칠기 Rz / 다듬질 기호<br>가공 방법 기호(L·D·M·G·FF) / 기하공차의 종류와 기입 틀 / 절삭 가공</div>
+  
+</section>
+
+<!-- 표면 거칠기 -->
+<section class="page" data-title="표면 거칠기 Ra·Ry·Rz (움직이는 그림)">
+  <div class="kicker"><span class="lesson">10차시</span>표면 거칠기 <span class="pg">교재 9쪽 5)</span></div>
+  <h2>매끄러움을 숫자로 — Ra, Ry, Rz</h2>
+  <div class="cols c46">
+    <div class="col" style="gap:7px">
+      <div class="box hl"><h4>① 산술 평균 거칠기 Ra</h4><p class="mini">기준 길이의 거칠기 곡선에서 <b>중심선으로부터의 높이(절댓값)를 평균</b>한 값(μm). 가장 많이 쓴다.</p></div>
+      <div class="box"><h4>② 최대 높이 Ry (Rmax)</h4><p class="mini">기준 길이 안에서 <b>가장 높은 봉우리와 가장 깊은 골</b> 사이의 간격(μm).</p></div>
+      <div class="box gd"><h4>③ 10점 평균 거칠기 Rz</h4><p class="mini">높은 쪽에서 5번째까지의 봉우리 평균과 깊은 쪽에서 5번째까지의 골 평균의 <b>차</b>(μm).<br><span class="chk">교재 바로잡기</span> 교재 9쪽은 Rz도 '최대 높이'로 적었으나 10점 평균 거칠기이다.</p></div>
+      <div class="supp"><b class="lab">주의</b>교재·시험 기준의 표면 거칠기 표시는 산술 평균·최대 높이·10점 평균이다. '최저 높이 거칠기'라는 것은 없다. <span class="gq tonly">기출 3-11</span><br><b class="lab">규격</b>예전 KS에서는 Rz가 10점 평균 거칠기였지만, 지금의 ISO 방식 규격에서는 Rz가 최대 높이(예전 Ry)를 뜻한다. 이 시험은 교재·기출대로 <b>Ry = 최대 높이, Rz = 10점 평균</b>으로 답한다.</div>
+    </div>
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-rough" viewBox="0 0 560 250"></svg>
+        <div class="ctrl">보기 <button data-rv="ra" class="on">Ra</button><button data-rv="ry">Ry</button><button data-rv="rz">Rz</button><span class="sp"></span>가공 <button data-rp="ff">줄</button><button data-rp="l" class="on">선반</button><button data-rp="g">연삭</button><button data-rp="lp">래핑</button></div>
+        <div class="readout" id="rough-out"></div>
+      </div>
+      <div class="analogy"><b class="lab">비유</b>산길의 울퉁불퉁함을 나타낼 때, '평균적으로 얼마나 오르내리는가'가 Ra, '가장 높은 산과 가장 깊은 골짜기의 차'가 Ry, '높은 산 다섯 개와 깊은 골 다섯 개의 평균 차'가 Rz이다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 다듬질·가공 기호 -->
+<section class="page" data-title="다듬질 기호와 가공 방법 기호">
+  <div class="kicker"><span class="lesson">10차시</span>다듬질 기호 · 가공 방법 기호 <span class="pg">교재 9쪽 · 10쪽 8) · 보충 Ⅱ-1 7)</span></div>
+  <h2>▽ 개수는 매끄러움, 영문자는 가공 방법</h2>
+  <div class="cols">
+    <div class="col">
+      <table class="t" style="font-size:14.5px">
+        <tr><th>다듬질 기호(예전 KS 표기)</th><th>Ra</th><th>표면 상태</th></tr>
+        <tr><td class="c">～</td><td class="c">—</td><td>주물·단조품의 거스러미만 떼어 내는 정도</td></tr>
+        <tr><td class="c">▽</td><td class="c">25a</td><td>줄·선반·밀링 등의 거친 면(흔적이 남음)</td></tr>
+        <tr><td class="c">▽▽</td><td class="c">6.3a</td><td>흔적이 남지 않을 정도의 가공면</td></tr>
+        <tr><td class="c">▽▽▽</td><td class="c">1.6a</td><td>흔적이 전혀 남지 않는 정밀한 가공면</td></tr>
+        <tr><td class="c">▽▽▽▽</td><td class="c">0.2a</td><td>래핑·버핑 등으로 광택이 나는 초정밀 가공면</td></tr>
+      </table>
+      <div class="box" style="margin-top:8px"><h4>절삭 가공 (교재 10쪽)</h4><p class="mini">공작물보다 <b>경도가 높은 공구</b>와 공작물을 상대 운동시켜 불필요한 부분을 깎아 내는 작업이다. 선반, 드릴링 머신, 밀링 머신, 플레이너 등. <span class="chk">교재 바로잡기</span> 교재 10쪽 '플레이터'는 '플레이너'의 오기이다.</p></div>
+    </div>
+    <div class="col">
+      <div class="supp"><b class="lab">보충</b>가공 방법 기호(KS B 0107) — 거칠기 지시 기호의 b 자리에 쓴다 <span class="gq tonly">기출 3-12</span></div>
+      <div class="grid4" style="margin-top:6px">
+        <div class="box hl"><h4>L</h4><p class="mini">선반(선삭)</p></div><div class="box hl"><h4>D</h4><p class="mini">드릴</p></div>
+        <div class="box hl"><h4>B</h4><p class="mini">보링</p></div><div class="box hl"><h4>M</h4><p class="mini">밀링</p></div>
+        <div class="box"><h4>P</h4><p class="mini">평삭(플레이닝)</p></div><div class="box"><h4>G</h4><p class="mini">연삭</p></div>
+        <div class="box gd"><h4>FF</h4><p class="mini">줄 다듬질</p></div><div class="box"><h4>?</h4><p class="mini">기호는 가공 방법의 영어 머리글자</p></div>
+      </div>
+      <div class="wbox" style="margin-top:8px"><svg viewBox="0 0 460 130">
+        <line x1="20" y1="110" x2="440" y2="110" stroke="#0F3057" stroke-width="2"/>
+        <path d="M150 110 L130 75 H175 M130 75 L165 20 H330" fill="none" stroke="#0F3057" stroke-width="2"/>
+        <text x="170" y="66" font-size="14" font-weight="700" fill="#c8423b">Ra 1.6</text><text x="200" y="15" font-size="14" font-weight="700" fill="#00879E">M (밀링)</text>
+        <text x="300" y="66" font-size="12" fill="#5b6876">a: 거칠기 값</text><text x="300" y="86" font-size="12" fill="#5b6876">b: 가공 방법 기호</text>
+      </svg></div>
+      <div class="analogy" style="font-size:15.5px"><b class="lab">비유</b>음식 주문서에 '덜 맵게(▽ 개수)'와 '굽기 방식(L·M·G)'을 함께 적는 것과 같다. 매끄러움과 만드는 방법을 같이 지시한다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 기하공차 분류 -->
+<section class="page" data-title="활동 · 기하공차 분류하기">
+  <div class="kicker"><span class="lesson">10차시</span>기하공차의 종류 <span class="pg">교재 9쪽 6)</span></div>
+  <h2>모양·자세·위치·흔들림 — 기하공차 분류하기</h2>
+  <div class="cols c46">
+    <div class="col">
+      <table class="t" style="font-size:14.5px">
+        <tr><th>적용 형체</th><th>종류</th><th>공차</th></tr>
+        <tr><td class="c">단독 형체</td><td class="c"><b>모양</b></td><td>진직도 ─, 평면도 ▱, 진원도 ○, 원통도 ⌭</td></tr>
+        <tr><td class="c">단독·관련</td><td class="c">모양</td><td>선의 윤곽도 ⌒, 면의 윤곽도 ⌓</td></tr>
+        <tr><td class="c" rowspan="3">관련 형체<br>(데이텀 필요)</td><td class="c"><b>자세</b></td><td>평행도 ∥, 직각도 ⊥, 경사도 ∠</td></tr>
+        <tr><td class="c"><b>위치</b></td><td>위치도 ⌖, 동축도(동심도) ◎, 대칭도 ⌯</td></tr>
+        <tr><td class="c"><b>흔들림</b></td><td>원주 흔들림 ↗, 온 흔들림 ⌰</td></tr>
+      </table>
+      <div class="analogy" style="font-size:15.5px"><b class="lab">비유</b><b>모양</b> 공차는 "혼자서 바른가(곧은가, 둥근가)", <b>자세</b>는 "기준에 대해 바르게 서 있는가(평행·직각)", <b>위치</b>는 "제자리에 있는가", <b>흔들림</b>은 "돌렸을 때 떨리지 않는가"를 묻는다.</div>
+    </div>
+    <div class="col">
+      <div class="ctrl" style="font-size:15.5px">종류를 고르고 → 공차를 누른다:
+        <span class="sp"></span><button data-gt="1" class="on">모양</button><button data-gt="2">자세</button><button data-gt="3">위치·흔들림</button></div>
+      <div class="sortq" id="sort10" style="margin-top:6px">
+        <button data-c="1">진원도</button><button data-c="2">평행도</button><button data-c="1">평면도</button><button data-c="3">위치도</button>
+        <button data-c="2">직각도</button><button data-c="1">진직도</button><button data-c="3">동축도</button><button data-c="1">원통도</button>
+        <button data-c="2">경사도</button><button data-c="3">대칭도</button><button data-c="3">원주 흔들림</button>
+      </div>
+      <div class="ctrl" style="margin-top:8px"><button id="sort10-chk">채점하기</button><button id="sort10-rst">다시 하기</button><span class="readout" id="sort10-out" style="margin-left:10px"></span></div>
+      <div class="legend"><span><i style="background:#00879E"></i>모양</span><span><i style="background:#FFC145"></i>자세</span><span><i style="background:#0F3057"></i>위치·흔들림</span><span><i style="background:#fbe3e1;border:1px solid #c8423b"></i>틀림</span></div>
+      <div class="box gd" style="margin-top:8px"><h4>함정</h4><p class="mini">진원도는 '둥근 모양'이므로 <b>모양 공차</b>이다. 평행도·직각도는 기준(데이텀)이 필요한 <b>자세 공차</b>이다. 위치도는 쓰임에 따라 데이텀 없이 쓰기도 한다.</p></div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 기하공차 기입 틀 -->
+<section class="page" data-title="기하공차 기입 틀 읽기 (움직이는 그림)">
+  <div class="kicker"><span class="lesson">10차시</span>기하공차 기입 틀 <span class="pg">교재 9쪽 6) · 부연</span></div>
+  <h2>⊥ 0.02 A — '데이텀 A에 대해 직각, 0.02 mm 폭 안에'</h2>
+  <div class="cols c46">
+    <div class="col" style="gap:8px">
+      <div class="wbox"><svg viewBox="0 0 420 90">
+        <rect x="40" y="20" width="60" height="44" fill="#fff" stroke="#0F3057" stroke-width="2"/><text x="70" y="51" text-anchor="middle" font-size="26" fill="#0F3057">⊥</text>
+        <rect x="100" y="20" width="100" height="44" fill="#fff" stroke="#0F3057" stroke-width="2"/><text x="150" y="50" text-anchor="middle" font-size="20" font-weight="700" fill="#c8423b">0.02</text>
+        <rect x="200" y="20" width="56" height="44" fill="#fff" stroke="#0F3057" stroke-width="2"/><text x="228" y="50" text-anchor="middle" font-size="20" font-weight="700" fill="#00879E">A</text>
+        <text x="70" y="84" text-anchor="middle" font-size="11.5" fill="#5b6876">공차 종류</text><text x="150" y="84" text-anchor="middle" font-size="11.5" fill="#5b6876">공차값(mm)</text><text x="228" y="84" text-anchor="middle" font-size="11.5" fill="#5b6876">데이텀</text>
+        <text x="280" y="48" font-size="13" fill="#0F3057">← 기입 틀</text></svg></div>
+      <div class="steps">
+        <div>첫 칸: 어떤 공차인가 → <b>⊥ 직각도</b></div>
+        <div>둘째 칸: 허용 폭 → <b>0.02 mm</b> (∅가 붙으면 원통 모양 영역)</div>
+        <div>셋째 칸: 무엇을 기준으로 → <b>데이텀 A</b> (진직도·평면도·진원도·원통도는 데이텀이 없다)</div>
+      </div>
+      <div class="supp"><b class="lab">부연</b>기입 틀 읽기는 교재 이론에는 없지만 도면검토 실무와 도면 해독 문항에 필요하여 덧붙인다.</div>
+    </div>
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-gdt" viewBox="0 0 520 260"></svg>
+        <div class="ctrl">실제 면의 기울어짐 <input type="range" id="gd-a" min="0" max="0.04" step="0.001" value="0.012"> <span class="readout" id="gd-av"></span></div>
+        <div class="readout" id="gd-out"></div>
+      </div>
+      <div class="analogy"><b class="lab">비유</b>벽에 붙인 두 장의 유리판(간격 0.02 mm) 사이에 실제 면이 통째로 들어가면 합격이다. 유리판은 바닥(데이텀 A)에 정확히 수직으로 세워져 있다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 10차시 확인 -->
+<section class="page" data-title="10차시 확인 문제">
+  <div class="kicker"><span class="lesson">10차시</span>확인 문제 <span class="pg">기출 연계</span></div>
+  <h2>10차시 확인 문제</h2>
+  <div class="quiz">
+    <div class="q">1. KS B ISO 4287에 따른 표면 거칠기 표시가 아닌 것은? <span class="gq tonly">기출 3-11</span><br>① 산술 평균 거칠기 ② 최대 높이 거칠기 ③ 최저 높이 거칠기 ④ 10점 평균 거칠기
+      <div class="ox" data-a="3" data-e="교재·시험 기준의 표면 거칠기 표시는 산술 평균·최대 높이·10점 평균 거칠기이다. &#x27;최저 높이 거칠기&#x27;라는 것은 없다. (현행 ISO 규격에서는 10점 평균을 쓰지 않고 Rz가 최대 높이를 뜻하지만, 이 기출의 답은 ③이다.)"><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">2. 표면 거칠기 지시에서 줄 가공을 뜻하는 기호는? <span class="gq tonly">기출 3-12</span><br>① L ② D ③ F ④ FF
+      <div class="ox" data-a="4" data-e="줄 다듬질의 가공 방법 기호는 FF이다. L은 선반, D는 드릴, M은 밀링, G는 연삭이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">3. 기하공차에서 모양 공차인 것은? <span class="gq tonly">기출 3-13</span><br>① 평행도 ② 위치도 ③ 진원도 ④ 직각도
+      <div class="ox" data-a="3" data-e="진원도는 혼자서 둥근지를 보는 모양 공차이다. 평행도·직각도는 자세 공차, 위치도는 위치 공차이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">4. 단독 형체에 적용하는 모양 공차가 아닌 것은? <span class="gq tonly">교재 지필 안내 3</span><br>① 평행도 ② 평면도 ③ 진직도 ④ 진원도
+      <div class="ox" data-a="1" data-e="평행도는 데이텀(기준)이 필요한 관련 형체의 자세 공차이다. 평면도·진직도·진원도는 단독 형체의 모양 공차이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">5. 산술 평균 거칠기 Ra는 표면의 최고점과 최저점의 간격이다. <span class="gq tonly">실전 모의 2</span>
+      <div class="ox" data-a="2" data-e="Ra는 높이(절댓값)의 평균값이다. 가장 높은 봉우리와 가장 깊은 골의 간격은 최대 높이 Ry이다. 그래서 X이다."><button>O</button><button>X</button></div><div class="fb"></div></div>
+    <div class="q">6. 다듬질 기호 ▽▽▽의 산술 평균 거칠기 값(교재 표)은?
+      <button>정답 보기</button><div class="ans">1.6a (Ra 1.6 μm)</div></div>
+  </div>
+  <div class="oneline" style="margin-top:auto"><b>정리</b>Ra 평균 · Ry 최고−최저 · Rz 10점 평균 · L 선반 D 드릴 M 밀링 G 연삭 FF 줄 · 진원도는 모양, 직각도는 자세</div>
+  
+</section>
+
+<!-- 11차시 표지 -->
+<section class="page sec-cover" data-title="11차시 · 3D 형상모델링">
+  <div class="num">11</div>
+  <h1>3D 형상모델링 — 명령과 파일 형식</h1>
+  <div class="sub">와이어프레임·서피스·솔리드 모델링 / 돌출·회전 돌출·경로 곡선 돌출과 빼기<br>필렛·챔퍼·미러·원형 패턴 / 2D 편집(트림·옵셋) / 파일 형식·좌표계·템플릿</div>
+  
+</section>
+
+<!-- 모델링 방식 -->
+<section class="page" data-title="모델링 방식 3가지 (움직이는 그림)">
+  <div class="kicker"><span class="lesson">11차시</span>모델링 방식 <span class="pg">보충 · 학생 기출</span></div>
+  <h2>선으로, 껍질로, 속까지 — 와이어프레임·서피스·솔리드</h2>
+  <div class="cols c46">
+    <div class="col">
+      <table class="t" style="font-size:14.5px">
+        <tr><th>방식</th><th>표현</th><th>특징</th></tr>
+        <tr><td class="c"><b>와이어프레임</b></td><td>모서리 <b>선</b>만</td><td>데이터가 가장 적고 빠르다. 숨은선 제거·단면·부피 계산이 안 된다.</td></tr>
+        <tr><td class="c"><b>서피스</b></td><td><b>면(껍질)</b>까지</td><td>숨은면 제거, 복잡한 곡면 표현, NC 공구 경로 생성에 쓴다. 속이 비어 부피·질량은 모른다.</td></tr>
+        <tr><td class="c"><b>솔리드</b></td><td><b>속이 찬 입체</b></td><td><b>부피·질량·무게 중심·관성 모멘트</b> 계산, <b>간섭 검사</b>, 단면도 작성이 된다. 데이터가 가장 많다.</td></tr>
+      </table>
+      <div class="analogy"><b class="lab">비유</b>철사로 만든 상자 뼈대가 <b>와이어프레임</b>, 종이로 겉을 싼 빈 상자가 <b>서피스</b>, 나무토막을 깎은 꽉 찬 상자가 <b>솔리드</b>이다. 무게를 달 수 있는 것은 나무토막뿐이다.</div>
+    </div>
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-mtype" viewBox="0 0 520 280"></svg>
+        <div class="ctrl"><button data-mt="wire">와이어프레임</button><button data-mt="surf">서피스</button><button data-mt="solid" class="on">솔리드</button><span class="sp"></span><button data-mt2="cut">단면 보기</button><button data-play class="on">정지</button></div>
+        <div class="readout" id="mt-out"></div>
+      </div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 3D 피처 명령 -->
+<section class="page" data-title="3D 피처 명령 (움직이는 그림)">
+  <div class="kicker"><span class="lesson">11차시</span>3D 피처 명령 <span class="pg">교재 10~11쪽 1)</span></div>
+  <h2>2D 스케치가 3D 형상이 되는 명령들</h2>
+  <div class="cols c64">
+    <div class="col">
+      <div class="wbox">
+        <svg id="w-feat" viewBox="0 0 620 330"></svg>
+        <div class="ctrl"><button data-fc="ext" class="on">돌출</button><button data-fc="rev">회전 돌출</button><button data-fc="swp">경로 곡선 돌출</button><button data-fc="cut">돌출 빼기(구멍)</button><button data-fc="fil">필렛</button><button data-fc="cha">챔퍼</button><button data-fc="mir">미러</button><button data-fc="pat">원형 패턴</button><span class="sp"></span><button data-play class="on">정지</button></div>
+      </div>
+    </div>
+    <div class="col" style="gap:8px">
+      <div class="card t"><h3 id="feat-name">돌출</h3><p class="mini" id="feat-desc"></p></div>
+      <table class="t" style="font-size:13.5px" id="feat-tbl"></table>
+      <div class="analogy" style="font-size:15px"><b class="lab">비유</b>돌출은 쿠키 틀로 반죽을 눌러 뽑아내는 것, 회전 돌출은 도자기 물레, 경로 곡선 돌출은 생크림 짤주머니로 길을 따라 짜는 것이다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 2D 편집 -->
+<section class="page" data-title="2D 스케치 편집 명령">
+  <div class="kicker"><span class="lesson">11차시</span>2D 편집 명령 <span class="pg">보충 Ⅲ-4 2)</span></div>
+  <h2>스케치를 다듬는 명령 — 트림, 연장, 옵셋, 미러, 패턴</h2>
+  <div class="grid3" style="flex:1;min-height:0">
+    <div class="box hl"><h4>트림 (trim)</h4>
+      <svg id="ed-trim" viewBox="0 0 220 110" style="width:100%;height:120px"><line x1="20" y1="55" x2="200" y2="55" stroke="#0F3057" stroke-width="3"/><line x1="110" y1="10" x2="110" y2="55" stroke="#0F3057" stroke-width="3"/><line x1="110" y1="55" x2="110" y2="100" stroke="#c8423b" stroke-width="3" stroke-dasharray="5 4"/><text x="118" y="92" font-size="12" fill="#c8423b">잘라 냄</text></svg>
+      <p class="mini">경계 요소를 기준으로 <b>불필요한 선을 잘라 지운다</b>. <span class="gq tonly">기출 1-27</span></p></div>
+    <div class="box"><h4>연장 (extend)</h4>
+      <svg id="ed-ext" viewBox="0 0 220 110" style="width:100%;height:120px"><line x1="190" y1="10" x2="190" y2="100" stroke="#0F3057" stroke-width="3"/><line x1="20" y1="55" x2="120" y2="55" stroke="#0F3057" stroke-width="3"/><line x1="120" y1="55" x2="190" y2="55" stroke="#00879E" stroke-width="3" stroke-dasharray="5 4"/></svg>
+      <p class="mini">선을 경계 요소까지 <b>늘린다</b>.</p></div>
+    <div class="box"><h4>옵셋 (offset)</h4>
+      <svg id="ed-off" viewBox="0 0 220 110" style="width:100%;height:120px"><rect x="40" y="25" width="140" height="60" rx="6" fill="none" stroke="#0F3057" stroke-width="3"/><rect x="25" y="10" width="170" height="90" rx="12" fill="none" stroke="#00879E" stroke-width="3" stroke-dasharray="6 4"/></svg>
+      <p class="mini">선이나 윤곽을 <b>일정 거리만큼 평행하게 복사</b>한다(가공 여유, 공구 반지름 보정과 같은 생각).</p></div>
+    <div class="box gd"><h4>미러 (mirror)</h4>
+      <svg id="ed-mir" viewBox="0 0 220 110" style="width:100%;height:120px"><line x1="110" y1="5" x2="110" y2="105" stroke="#5b6876" stroke-dasharray="12 3 2 3"/><path d="M100 90 V30 L60 30 L40 60 L60 90 Z" fill="#e2f3f5" stroke="#0F3057" stroke-width="2.5"/><path d="M120 90 V30 L160 30 L180 60 L160 90 Z" fill="#fff4d6" stroke="#9a7400" stroke-width="2.5" stroke-dasharray="5 3"/></svg>
+      <p class="mini">기준선(3D는 <b>참조 평면</b>)에 대해 <b>대칭으로 이동·복사</b>한다. <span class="gq tonly">기출 3-2</span></p></div>
+    <div class="box"><h4>직사각형 패턴</h4>
+      <svg id="ed-rect" viewBox="0 0 220 110" style="width:100%;height:120px"><g fill="#e2f3f5" stroke="#0F3057" stroke-width="2"><circle cx="40" cy="30" r="10"/><circle cx="90" cy="30" r="10" stroke-dasharray="4 3"/><circle cx="140" cy="30" r="10" stroke-dasharray="4 3"/><circle cx="40" cy="80" r="10" stroke-dasharray="4 3"/><circle cx="90" cy="80" r="10" stroke-dasharray="4 3"/><circle cx="140" cy="80" r="10" stroke-dasharray="4 3"/></g></svg>
+      <p class="mini">가로·세로 방향으로 <b>일정 간격 배열</b> 복사</p></div>
+    <div class="box hl"><h4>원형 패턴</h4>
+      <svg id="ed-circ" viewBox="0 0 220 110" style="width:100%;height:120px"><circle cx="110" cy="55" r="45" fill="none" stroke="#5b6876" stroke-dasharray="12 3 2 3"/><g fill="#e2f3f5" stroke="#0F3057" stroke-width="2"><circle cx="155" cy="55" r="9"/><circle cx="132" cy="94" r="9" stroke-dasharray="4 3"/><circle cx="88" cy="94" r="9" stroke-dasharray="4 3"/><circle cx="65" cy="55" r="9" stroke-dasharray="4 3"/><circle cx="88" cy="16" r="9" stroke-dasharray="4 3"/><circle cx="132" cy="16" r="9" stroke-dasharray="4 3"/></g><circle cx="110" cy="55" r="3" fill="#c8423b"/></svg>
+      <p class="mini"><b>축(중심)을 기준으로</b> 일정 각도마다 복사(볼트 구멍 배치)</p></div>
+  </div>
+  <div class="oneline"><b>구별</b>잘라 지우기 = 트림 · 평행 복사 = 옵셋 · 대칭 복사 = 미러 · 축 둘레 복사 = 원형 패턴</div>
+  
+</section>
+
+<!-- 파일 형식·좌표계·템플릿 -->
+<section class="page" data-title="파일 형식, 좌표계, 템플릿">
+  <div class="kicker"><span class="lesson">11차시</span>파일 형식 · 좌표계 · 템플릿 <span class="pg">보충 Ⅲ-4 1) · 학생 기출</span></div>
+  <h2>어떤 파일로 저장하고, 어디에 보내는가</h2>
+  <div class="cols c64">
+    <div class="col">
+      <table class="t" style="font-size:14.5px">
+        <tr><th>형식(확장자)</th><th>내용</th><th>주로 쓰는 곳</th></tr>
+        <tr><td class="c"><b>STL</b></td><td>형상을 <b>삼각형 폴리곤</b>으로 표현</td><td><b>3D 프린터</b>, 조각기, 3차원 스캔 데이터</td></tr>
+        <tr><td class="c"><b>STEP</b> (.stp)</td><td>3D 형상 교환 <b>국제 표준</b>(ISO 10303)</td><td>서로 다른 CAD 사이의 3D 데이터 교환</td></tr>
+        <tr><td class="c">IGES (.igs)</td><td>2D·3D 형상 교환 형식(미국 표준에서 출발)</td><td>CAD 간 곡면 데이터 교환</td></tr>
+        <tr><td class="c">DWG · DXF</td><td>주로 2D 도면(3D 데이터도 저장 가능)</td><td>2D CAD(도면) 교환</td></tr>
+        <tr><td class="c"><b>NC</b> (.nc)</td><td>CNC 가공 프로그램(G·M 코드)</td><td><b>CNC 선반·머시닝센터</b></td></tr>
+        <tr><td class="c">prt · ipt</td><td>3D CAD 부품 파일</td><td>NX·Creo(prt), Inventor(ipt)</td></tr>
+        <tr><td class="c">JPG · PNG</td><td>그림(이미지)</td><td>3D 형상 정보가 없다</td></tr>
+      </table>
+    </div>
+    <div class="col" style="gap:8px">
+      <div class="box hl"><h4>3D 모델링의 좌표계</h4><p class="mini"><b>직교 좌표계</b>(X, Y, Z) · <b>원통 좌표계</b>(r, θ, z) · <b>구면 좌표계</b>(r, θ, φ). 'X-C 평면'은 3D 모델링 좌표계가 아니다.</p></div>
+      <div class="box gd"><h4>템플릿 (template)</h4><p class="mini">KS·ISO 규격의 <b>도면틀과 표제란</b>을 미리 만들어 저장해 두고, 3D 모델링 후 도면을 만들 때 불러와 쓰는 파일이다.</p></div>
+      <div class="analogy" style="font-size:15.5px"><b class="lab">비유</b>STEP은 여러 나라 사람이 함께 쓰는 '영어', STL은 모양을 삼각형 조각으로만 전하는 '간단한 말'(3D 프린터·스캔에 많이 쓴다), NC는 CNC 기계에게 주는 '작업 지시서'이다.</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- 11차시 확인 -->
+<section class="page" data-title="11차시 확인 문제">
+  <div class="kicker"><span class="lesson">11차시</span>확인 문제 <span class="pg">기출 연계</span></div>
+  <h2>11차시 확인 문제</h2>
+  <div class="quiz">
+    <div class="q">1. 2D 스케치 형상을 선택한 축을 기준으로 회전시켜 3D 모델을 만드는 기능을 '돌출'이라 한다. <span class="gq tonly">기출 2-1</span>
+      <div class="ox" data-a="2" data-e="축을 기준으로 스케치를 돌려 만드는 기능은 &#x27;회전(회전 돌출)&#x27;이다. &#x27;돌출&#x27;은 스케치를 직선 방향으로 뽑아낸다. 그래서 X이다."><button>O</button><button>X</button></div><div class="fb"></div></div>
+    <div class="q">2. 폴리곤 형태로 3D 프린터·조각기·3차원 스캔 데이터에 쓰는 파일 확장자는? <span class="gq tonly">기출 1-12</span><br>① .jt ② .nc ③ .stl ④ .step
+      <div class="ox" data-a="3" data-e="STL은 형상을 삼각형 폴리곤으로 나타내어 3D 프린터·조각기·스캔 데이터에 쓴다. .nc는 CNC 프로그램, .step은 3D 데이터 교환 형식이다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">3. CAM 프로그램에서 불필요한 선을 지울 때 쓰는 기능은? <span class="gq tonly">기출 1-27</span><br>① 필렛 ② 트림 ③ 옵셋 ④ 이동
+      <div class="ox" data-a="2" data-e="트림(trim)은 경계를 기준으로 불필요한 선을 잘라 지운다. 옵셋은 평행 복사, 필렛은 모서리를 둥글게 한다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">4. 무게 중심·질량을 구하기에 가장 좋은 모델링 방법은? <span class="gq tonly">교재 5회 15</span><br>① 와이어프레임 ② 서피스 ③ 솔리드 ④ 2D 스케치
+      <div class="ox" data-a="3" data-e="솔리드 모델은 속이 찬 입체라 부피·질량·무게 중심을 계산할 수 있다. 와이어프레임과 서피스는 속 정보가 없다."><button>①</button><button>②</button><button>③</button><button>④</button></div><div class="fb"></div></div>
+    <div class="q">5. 솔리드 형상의 모서리를 부드러운 곡면으로 처리하는 명령은?
+      <button>정답 보기</button><div class="ans">필렛(fillet) — 모서리를 둥글게(R) 한다. 비스듬히 깎는 것은 챔퍼(C)이다.</div></div>
+    <div class="q">6. KS·ISO 규격의 도면틀과 표제란을 미리 저장해 두고 도면 작업 때 불러 쓰는 것은? <span class="gq tonly">학생 기출</span>
+      <button>정답 보기</button><div class="ans">템플릿 — 도면틀·표제란을 미리 만들어 두고 불러 쓰는 파일이다.</div></div>
+  </div>
+  <div class="oneline" style="margin-top:auto"><b>정리</b>돌출·회전·경로(스윕) · 빼기 · 필렛(둥글게)·챔퍼(모따기) · 미러·원형 패턴 · STL 프린터, STEP 국제 표준, NC 가공</div>
+  
+</section>
+
+<!-- 단원 종합 -->
+<section class="page" data-title="Ⅱ단원 종합 문제">
+  <div class="kicker"><span class="lesson">11차시</span>단원 종합 <span class="pg">기출 연계</span></div>
+  <h2>Ⅱ. 기계요소설계 종합 문제</h2>
+  <div class="quiz" style="font-size:15.5px;gap:6px 26px">
+    <div class="q">1. 선의 종류 연결: 외형선·치수선·중심선·가상선 <span class="gq tonly">기출 2-3</span>
+      <button>정답 보기</button><div class="ans">굵은 실선 · 가는 실선 · 가는 1점 쇄선 · 가는 2점 쇄선</div></div>
+    <div class="q">2. KS B 0005의 내용은? <span class="gq tonly">기출 1-5</span>
+      <button>정답 보기</button><div class="ans">제도 – 스프링의 표시</div></div>
+    <div class="q">3. 베어링 62/22의 안지름[mm]은?
+      <button>정답 보기</button><div class="ans">22 mm</div></div>
+    <div class="q">4. H7/s6는 어떤 끼워맞춤인가? <span class="gq tonly">학생 기출</span>
+      <button>정답 보기</button><div class="ans">구멍 기준식 억지 끼워맞춤</div></div>
+    <div class="q">5. IT 등급에서 끼워맞춤 부분에 주로 쓰는 범위는?
+      <button>정답 보기</button><div class="ans">IT5 ~ IT10</div></div>
+    <div class="q">6. 기준 길이에서 가장 높은 봉우리와 가장 깊은 골의 간격으로 나타내는 거칠기는?
+      <button>정답 보기</button><div class="ans">최대 높이 Ry(Rmax) — 교재·시험 기준. 현행 ISO 규격에서는 같은 값을 Rz로 쓴다.</div></div>
+    <div class="q">7. 데이텀이 필요 없는 기하공차를 2개 쓰시오.
+      <button>정답 보기</button><div class="ans">진직도, 평면도, 진원도, 원통도 중 2개(모양 공차)</div></div>
+    <div class="q">8. 3D 형상 교환 국제 표준(ISO 10303) 형식은? <span class="gq tonly">학생 기출</span>
+      <button>정답 보기</button><div class="ans">STEP</div></div>
+  </div>
+  <div class="oneline" style="margin-top:auto"><b>단원 정리</b>선·기호 → 치수 → 공차·끼워맞춤 → 거칠기·기하공차 → 3D 형상. 다음은 Ⅲ. 컴퓨터활용생산(CNC)이다.</div>
+  
+</section>
+
+<!-- 교사용 -->
+
+
+
+</div></div>
+
+<div id="memoPanel"></div>
+<div id="rot"><span>화면을 가로로 돌리면 크게 보인다. 글자가 작으면 두 손가락으로 확대하고, 좌우로 밀면 쪽이 넘어간다.</span><button id="rot-x">닫기</button></div>
+<div id="nav">
+  <button id="prev">이전</button><span id="count"></span><button id="next">다음</button>
+  <select id="toc"></select>
+</div>
+
+<script>
+if(/[?&]print/.test(location.search))document.body.classList.add('print');
+const NS='http://www.w3.org/2000/svg';
+const C={navy:'#0F3057',teal:'#00879E',gold:'#FFC145',ink:'#1d2733',muted:'#5b6876',soft:'#e6ecf3',tsoft:'#e2f3f5',gsoft:'#fff4d6',red:'#c8423b',blue:'#2f6fd1',line:'#d6dee6'};
+function el(tag,at,parent){const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);if(parent)parent.appendChild(e);return e;}
+function txt(parent,x,y,s,at){const t=el('text',Object.assign({x,y,'font-size':14,fill:C.ink},at||{}),parent);t.textContent=s;return t;}
+function set(e,at){for(const k in at)e.setAttribute(k,at[k]);return e;}
+function $(id){return document.getElementById(id);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function fx(v,n){return (+v).toFixed(n);}
+const deg=Math.PI/180;
+/* 결정적 난수(쪽을 다시 열어도 같은 모양) */
+let seed=7;function rnd(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646;}
+function gauss(){return (rnd()+rnd()+rnd()+rnd()-2)/0.58;}
+/* 축 그리기 */
+function axes(g,x0,y0,w,h,xl,yl){
+  el('line',{x1:x0,y1:y0,x2:x0+w,y2:y0,stroke:C.navy,'stroke-width':2,'marker-end':'url(#ahn)'},g);
+  el('line',{x1:x0,y1:y0,x2:x0,y2:y0-h,stroke:C.navy,'stroke-width':2,'marker-end':'url(#ahn)'},g);
+  if(xl)txt(g,x0+w,y0+20,xl,{'text-anchor':'end','font-size':13,fill:C.muted});
+  if(yl)txt(g,x0+6,y0-h+4,yl,{'font-size':13,fill:C.muted});
+}
+function pathOf(pts){return pts.map((p,i)=>(i?'L':'M')+fx(p[0],1)+' '+fx(p[1],1)).join(' ');}
+
+/* ---------- 페이지 넘김 ---------- */
+const allPages=[...document.querySelectorAll('.page')];
+let teacher=/[?&](teacher|print)/.test(location.search);  /* 교사 화면은 교사용 PDF 캡처 때만 */
+let cur=0;
+function visiblePages(){return allPages.filter(p=>teacher||!p.classList.contains('teacher-only'));}
+function buildToc(){const toc=$('toc');toc.innerHTML='';visiblePages().forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.textContent=(i+1)+'. '+p.dataset.title;toc.appendChild(o);});}
+function show(i){
+  const vp=visiblePages();cur=Math.max(0,Math.min(vp.length-1,i));
+  allPages.forEach(p=>p.classList.remove('on'));const p=vp[cur];p.classList.add('on');
+  $('count').textContent=(cur+1)+' / '+vp.length;
+  $('toc').value=cur;
+  const m=p.querySelector('.memo');$('memoPanel').innerHTML=m?m.innerHTML:'<span style="color:#5b6876">이 쪽에는 교사 메모가 없다.</span>';
+  try{if(location.protocol!=='data:')history.replaceState(null,'','#p'+(cur+1));}catch(e){}
+}
+function applyMode(){
+  document.body.classList.toggle('teacher',teacher);
+  if($('mode'))$('mode').textContent=teacher?'학생 보기로 전환':'교사 보기로 전환';
+  const curPage=visiblePages()[cur];buildToc();
+  let idx=visiblePages().indexOf(curPage);if(idx<0)idx=visiblePages().length-1;show(idx);fit();
+}
+$('prev').onclick=()=>show(cur-1);
+$('next').onclick=()=>show(cur+1);
+$('toc').onchange=e=>show(+e.target.value);
+if($('mode'))$('mode').onclick=()=>{teacher=!teacher;try{localStorage.setItem('cam-mode',teacher?'teacher':'student');}catch(e){}applyMode();};
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(cur+1);}
+  if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(cur-1);}
+});
+function fit(){const vp=$('viewport');const s=Math.min(vp.clientWidth/1300,vp.clientHeight/740);$('stage').style.transform='scale('+s+')';}
+window.addEventListener('resize',fit);
+document.querySelectorAll('.q button').forEach(b=>b.onclick=()=>{const a=b.parentElement.querySelector('.ans');a.style.display=a.style.display==='block'?'none':'block';});
+
+/* ---------- 위젯 공통 ---------- */
+const widgets=[];
+function widget(svgId,obj){const svg=$(svgId);obj.svg=svg;obj.box=svg.closest('.wbox')||svg.parentElement;obj.page=svg.closest('.page');
+  if(obj.playing===undefined)obj.playing=true;obj.init();obj.draw();
+  const pb=obj.box.querySelector('[data-play]');if(pb)pb.onclick=()=>{obj.playing=!obj.playing;pb.textContent=obj.playing?'정지':'재생';pb.classList.toggle('on',obj.playing);};
+  if(obj.step)widgets.push(obj);return obj;}
+function group(box,attr,cb){const bs=[...box.querySelectorAll('['+attr+']')];bs.forEach(b=>b.onclick=()=>{bs.forEach(x=>x.classList.remove('on'));b.classList.add('on');cb(b.getAttribute(attr));});}
+function slider(id,cb){const s=$(id);s.addEventListener('input',()=>cb(+s.value));return +s.value;}
+let last=performance.now();
+function safe(name,fn){try{fn();}catch(e){console.error('위젯 오류: '+name,e);}}
+
+
+const minis=[];
+/* ================= 공통: O·X/보기 문제, 분류 활동 ================= */
+safe('ox',()=>{document.querySelectorAll('.ox').forEach(box=>{
+  const a=+box.dataset.a;const bs=[...box.querySelectorAll('button')];const fb=box.parentElement.querySelector('.fb');
+  const e=box.dataset.e;  /* 풀이가 있으면 정답일 때 풀이를, 틀리면 '정답과 풀이 보기' 단추를 보인다 */
+  const reveal=()=>{bs.forEach(x=>x.className='');bs[a-1].className='right';fb.innerHTML='<b class="fb-ok">정답은 '+bs[a-1].textContent+'이다.</b> '+e;};
+  const others=()=>{if(e)box.closest('.page').querySelectorAll('.q .fb').forEach(x=>{if(x!==fb)x.innerHTML='';});};  /* 풀이는 방금 푼 문항만 보여 쪽이 넘치지 않게 한다 */
+  bs.forEach((b,i)=>b.onclick=()=>{bs.forEach(x=>x.className='');others();
+    if(i+1===a){b.className='right';if(fb){if(e)fb.innerHTML='<b class="fb-ok">정답이다.</b> '+e;else fb.textContent='정답이다.';}}
+    else{b.className='wrong';if(fb){if(e){fb.innerHTML='<b class="fb-no">틀렸다.</b> 다시 골라 본다. ';const sb=document.createElement('button');sb.className='fb-show';sb.textContent='정답과 풀이 보기';sb.onclick=reveal;fb.appendChild(sb);}else fb.textContent='다시 생각해 보자.';}}});});});
+
+/* 분류 활동: 컨테이너 id, 종류 단추 속성, 채점·초기화 단추 */
+function sorter(id,attr){
+  const box=$(id);const page=box.closest('.page');const items=[...box.querySelectorAll('button')];
+  let curC='1';const cls={'1':'c1','2':'c2','3':'c3'};
+  group(page,attr,v=>curC=v);
+  items.forEach(b=>b.onclick=()=>{b.className=cls[curC];b.dataset.pick=curC;});
+  $(id+'-chk').onclick=()=>{let ok=0,n=0;items.forEach(b=>{if(!b.dataset.pick)return;n++;
+    if(b.dataset.pick===b.dataset.c)ok++;else b.className='bad';});
+    $(id+'-out').textContent=n?('고른 '+n+'개 중 '+ok+'개 정답 (전체 '+items.length+'개)'):'먼저 상황을 눌러 분류한다.';};
+  $(id+'-rst').onclick=()=>{items.forEach(b=>{b.className='';delete b.dataset.pick;});$(id+'-out').textContent='';};
+}
+
+/* ================= 7차시 ================= */
+safe('sort7',()=>sorter('sort7','data-lt'));
+
+/* 선의 종류 강조 그림 */
+safe('lines',()=>widget('w-lines',{playing:false,k:'out',
+  init(){const g=this.svg;const G={};const grp=k=>G[k]||(G[k]=el('g',{'data-k':k},g));this.G=G;
+    const TH={stroke:C.navy,'stroke-width':1.2,fill:'none'},TK={stroke:C.navy,'stroke-width':3.2,fill:'none'};
+    // 해칭(위쪽 반단면)
+    const cp=el('clipPath',{id:'hcp'},g);el('polygon',{points:'90,80 260,80 260,150 215,150 200,125 90,125'},cp);
+    const H=grp('hat');const hg=el('g',{'clip-path':'url(#hcp)'},H);for(let x=20;x<340;x+=11)el('line',Object.assign({x1:x,y1:160,x2:x+90,y2:70},TH),hg);
+    // 외형선
+    const O=grp('out');
+    el('path',Object.assign({d:'M98 80 H260 V220 H98 L90 212 V88 Z'},TK),O);
+    el('path',Object.assign({d:'M260 110 H390 M260 190 H390 M420 110 H470 V190 H420'},TK),O);
+    el('path',Object.assign({d:'M90 125 H200 L215 150'},TK),O);
+    // 숨은선(아래쪽)
+    el('path',Object.assign({d:'M90 175 H200 L215 150','stroke-dasharray':'8 4'},TH,{'stroke-width':1.8}),grp('hid'));
+    // 중심선
+    el('line',Object.assign({x1:66,y1:150,x2:494,y2:150,'stroke-dasharray':'16 3 2 3'},TH),grp('cen'));
+    // 파단선
+    el('path',Object.assign({d:'M390 110 q8 10 0 20 q-8 10 0 20 q8 10 0 20 q-8 10 0 20 M420 110 q8 10 0 20 q-8 10 0 20 q8 10 0 20 q-8 10 0 20'},TH),grp('brk'));
+    // 가상선(맞물리는 풀리)
+    el('rect',Object.assign({x:430,y:72,width:40,height:156,'stroke-dasharray':'16 3 2 3 2 3'},TH),grp('pha'));
+    // 치수선·치수보조선
+    const D=grp('dim');
+    el('path',Object.assign({d:'M88 80 H46 M88 220 H46 M90 224 V266 M260 224 V266'},TH),D);
+    el('line',Object.assign({x1:56,y1:84,x2:56,y2:216,'marker-start':'url(#ahs)','marker-end':'url(#ahn)'},TH),D);
+    el('line',Object.assign({x1:94,y1:256,x2:256,y2:256,'marker-start':'url(#ahs)','marker-end':'url(#ahn)'},TH),D);
+    const t1=txt(D,50,155,'∅140',{'font-size':14,fill:C.navy,'text-anchor':'middle',transform:'rotate(-90 50 155)'});
+    txt(D,175,250,'170',{'font-size':14,fill:C.navy,'text-anchor':'middle'});
+    // 지시선
+    const L=grp('lead');el('path',Object.assign({d:'M94 84 L60 40 H30','marker-start':'url(#ahs)'},TH),L);txt(L,44,35,'C2',{'font-size':14,fill:C.navy,'text-anchor':'middle'});
+    txt(g,300,290,'(위쪽 절반: 반단면 / 아래쪽 절반: 외형도)',{'font-size':12,fill:C.muted,'text-anchor':'middle'});
+    this.box.querySelectorAll('[data-ln]').forEach(b=>b.onclick=()=>{this.box.querySelectorAll('[data-ln]').forEach(x=>x.classList.remove('on'));b.classList.add('on');this.k=b.dataset.ln;this.draw();});},
+  draw(){const I={out:'외형선 — 굵은 실선. 물체의 보이는 부분의 모양을 나타낸다.',hid:'숨은선 — 가는(또는 굵은) 파선. 물체의 보이지 않는 부분(구멍 속)을 나타낸다.',cen:'중심선 — 가는 1점 쇄선. 도형의 중심, 중심이 이동한 궤적을 나타낸다.',
+      dim:'치수선·치수보조선 — 가는 실선. 치수를 기입하기 위해, 또 도형에서 끌어내어 치수선의 위치를 정하기 위해 쓴다.',lead:'지시선 — 가는 실선. 기술·기호(C2 같은 모따기 지시) 등을 표시하기 위해 끌어낸다.',
+      pha:'가상선 — 가는 2점 쇄선. 인접 부품(여기서는 맞물리는 풀리), 가공 전후의 모양, 이동 위치를 나타낸다.',brk:'파단선 — 불규칙한 파형의 가는 실선. 긴 축의 일부를 잘라 생략한 경계를 나타낸다.',hat:'해칭 — 가는 실선을 규칙적으로(보통 45°) 늘어놓은 것. 단면도의 절단된 부분을 나타낸다.'};
+    for(const k in this.G){const on=k===this.k;this.G[k].querySelectorAll('line,path,rect,text').forEach(e=>{
+      if(e.tagName==='text'){e.setAttribute('fill',on?C.red:C.navy);}else e.setAttribute('stroke',on?C.red:C.navy);});
+      this.G[k].setAttribute('opacity',on?1:0.35);}
+    $('ln-out').textContent=I[this.k];}}));
+
+/* 치수 보조기호 */
+safe('sym',()=>widget('w-sym',{playing:false,k:'phi',
+  init(){this.g=el('g',{},this.svg);group(this.box,'data-sy',x=>{this.k=x;this.draw();});},
+  draw(){const g=this.g;g.innerHTML='';const TK={stroke:C.navy,'stroke-width':3,fill:C.tsoft},TH={stroke:C.navy,'stroke-width':1.2,fill:'none'};
+    const dimV=(x,y1,y2,s)=>{el('line',Object.assign({x1:x,y1:y1+3,x2:x,y2:y2-3,'marker-start':'url(#ahs)','marker-end':'url(#ahn)'},TH),g);txt(g,x-8,(y1+y2)/2,s,{'font-size':18,'font-weight':700,fill:C.red,'text-anchor':'middle',transform:`rotate(-90 ${x-8} ${(y1+y2)/2})`});};
+    const lead=(x,y,x2,y2,s)=>{el('path',Object.assign({d:`M${x} ${y} L${x2} ${y2} h40`,'marker-start':'url(#ahs)'},TH),g);txt(g,x2+20,y2-6,s,{'font-size':18,'font-weight':700,fill:C.red,'text-anchor':'middle'});};
+    let msg='';
+    if(this.k==='phi'){el('rect',Object.assign({x:180,y:70,width:220,height:110},TK),g);el('line',Object.assign({x1:160,y1:125,x2:420,y2:125,'stroke-dasharray':'14 3 2 3'},TH),g);
+      el('path',Object.assign({d:'M178 70 H130 M178 180 H130'},TH),g);dimV(140,70,180,'∅40');msg='∅40 — 지름 40 mm. 원통(축·구멍)을 옆에서 본 그림에서도 둥글다는 것을 알려 준다.';}
+    if(this.k==='r'){el('path',Object.assign({d:'M180 200 V100 Q180 60 220 60 H400 V200 Z'},TK),g);lead(196,74,140,40,'R10');msg='R10 — 반지름 10 mm의 둥근 모서리(라운드).';}
+    if(this.k==='sq'){el('rect',Object.assign({x:180,y:80,width:220,height:90},TK),g);el('path',Object.assign({d:'M180 80 L400 170 M400 80 L180 170'},TH),g);
+      el('path',Object.assign({d:'M178 80 H130 M178 170 H130'},TH),g);dimV(140,80,170,'□20');msg='□20 — 한 변이 20 mm인 정사각형 단면. 대각선(가는 실선)은 평면임을 나타낸다.';}
+    if(this.k==='c'){el('path',Object.assign({d:'M180 200 V90 L210 60 H400 V200 Z'},TK),g);lead(196,74,140,40,'C2');msg='C2 — 45° 모따기, 모따기 길이 2 mm. 모서리를 비스듬히 깎아 낸 것이다.';}
+    if(this.k==='t'){el('rect',Object.assign({x:140,y:110,width:300,height:16},TK),g);lead(300,118,340,70,'t3');msg='t3 — 판의 두께 3 mm. 두께 방향 투상도를 생략할 때 쓴다.';}
+    if(this.k==='sr'){el('path',Object.assign({d:'M180 80 H350 A45 45 0 0 1 350 170 H180 Z'},TK),g);lead(388,100,420,50,'SR45');msg='SR45 — 구(球)의 반지름 45 mm. 둥근 볼 끝. 구의 지름은 S∅로 쓴다.';}
+    if(this.k==='ref'){el('rect',Object.assign({x:120,y:90,width:330,height:70},TK),g);[120,230,330,450].forEach(x=>el('line',Object.assign({x1:x,y1:162,x2:x,y2:210},TH),g));
+      [[120,230,'40'],[230,330,'35'],[330,450,'(45)']].forEach(([a,b,s])=>{el('line',Object.assign({x1:a+3,y1:200,x2:b-3,y2:200,'marker-start':'url(#ahs)','marker-end':'url(#ahn)'},TH),g);txt(g,(a+b)/2,194,s,{'font-size':17,'font-weight':700,fill:s[0]==='('?C.red:C.navy,'text-anchor':'middle'});});
+      el('line',Object.assign({x1:120,y1:88,x2:120,y2:40},TH),g);el('line',Object.assign({x1:450,y1:88,x2:450,y2:40},TH),g);el('line',Object.assign({x1:123,y1:50,x2:447,y2:50,'marker-start':'url(#ahs)','marker-end':'url(#ahn)'},TH),g);txt(g,285,44,'120',{'font-size':17,'font-weight':700,fill:C.navy,'text-anchor':'middle'});
+      msg='(45) — 참고 치수. 전체 120에서 40과 35를 빼면 알 수 있는 값이라 가공 기준이 아니라 참고로만 괄호에 넣는다(중복 치수 방지).';}
+    $('sym-out').textContent=msg;}}));
+
+/* ================= 8차시 ================= */
+/* 치수 기입 방법 */
+safe('dimm',()=>widget('w-dimm',{playing:false,m:'ser',tol:false,
+  init(){this.g=el('g',{},this.svg);group(this.box,'data-dm',x=>{this.m=x;this.draw();});$('dm-tol').onclick=()=>{this.tol=!this.tol;$('dm-tol').classList.toggle('on',this.tol);this.draw();};},
+  draw(){const g=this.g;g.innerHTML='';const x0=70,k=3.6,y0=60,H=90,X=v=>x0+v*k,hs=[20,45,75,110];
+    const TH={stroke:C.navy,'stroke-width':1.1,fill:'none'};
+    el('rect',{x:x0,y:y0,width:130*k,height:H,fill:C.tsoft,stroke:C.navy,'stroke-width':2.5},g);
+    hs.forEach((h,i)=>{el('circle',{cx:X(h),cy:y0+H/2,r:9,fill:'#fff',stroke:C.navy,'stroke-width':2},g);
+      el('line',{x1:X(h),y1:y0+H/2-16,x2:X(h),y2:y0+H/2+16,stroke:C.navy,'stroke-width':.8,'stroke-dasharray':'8 2 2 2'},g);
+      if(this.m==='crd')txt(g,X(h)+12,y0+H/2-12,'ABCD'[i],{'font-size':13,'font-weight':700,fill:C.teal});});
+    const ext=(v,y2)=>el('line',Object.assign({x1:X(v),y1:v===0?y0+H+2:y0+H/2+18,x2:X(v),y2},TH),g);
+    const dim=(a,b,y,s,one)=>{el('line',Object.assign({x1:X(a)+2,y1:y,x2:X(b)-2,y2:y,'marker-end':'url(#ahn)'},one?{}:{'marker-start':'url(#ahs)'},TH),g);
+      txt(g,(X(a)+X(b))/2,y-4,s,{'text-anchor':'middle','font-size':13,'font-weight':700,fill:C.navy});};
+    let msg='';const tolOf=[];
+    if(this.m==='ser'){[0,...hs].forEach(v=>ext(v,200));const pts=[0,...hs];for(let i=0;i<4;i++)dim(pts[i],pts[i+1],192,''+(pts[i+1]-pts[i]));
+      hs.forEach((h,i)=>tolOf.push(0.1*(i+1)));msg='직렬: 앞 치수의 끝이 다음 치수의 시작이다. 치수마다 ±0.1이면 D 구멍은 ±0.4까지 어긋날 수 있다(공차 누적).';}
+    if(this.m==='par'){hs.forEach((h,i)=>{ext(h,190+i*22);dim(0,h,182+i*22,''+h);tolOf.push(0.1);});el('line',Object.assign({x1:X(0),y1:y0+H+2,x2:X(0),y2:262},TH),g);
+      msg='병렬: 모든 치수가 왼쪽 기준면에서 출발한다. 공차가 쌓이지 않아 각 구멍이 ±0.1 안에 있다. 대신 치수선이 많아 자리를 차지한다.';}
+    if(this.m==='cum'){[0,...hs].forEach(v=>ext(v,200));el('circle',{cx:X(0),cy:192,r:4,fill:'none',stroke:C.navy,'stroke-width':1.3},g);
+      el('line',Object.assign({x1:X(0)+4,y1:192,x2:X(110)-2,y2:192},TH),g);hs.forEach(h=>{el('path',{d:`M${X(h)} 192 l-9 -3 v6z`,fill:C.navy},g);txt(g,X(h)-4,186,''+h,{'text-anchor':'end','font-size':13,'font-weight':700,fill:C.navy});});
+      txt(g,X(0)+8,186,'0',{'font-size':13,'font-weight':700,fill:C.navy});hs.forEach(()=>tolOf.push(0.1));
+      msg='누진: 기준점(작은 원) 하나에서 연속된 치수선 하나로 쓰고 위치값을 누적으로 적는다. 병렬처럼 공차가 쌓이지 않으면서 자리를 덜 차지한다.';}
+    if(this.m==='crd'){el('circle',{cx:X(0),cy:y0+H,r:5,fill:C.red},g);txt(g,X(0)-6,y0+H+18,'원점(0,0)',{'font-size':12,fill:C.red});
+      const tx=150,ty=185;['구멍','X','Y'].forEach((s,i)=>{el('rect',{x:tx+i*80,y:ty,width:80,height:20,fill:C.navy},g);txt(g,tx+i*80+40,ty+15,s,{'text-anchor':'middle','font-size':12.5,fill:'#fff','font-weight':700});});
+      hs.forEach((h,j)=>{['ABCD'[j],''+h,'12.5'].forEach((s,i)=>{el('rect',{x:tx+i*80,y:ty+20+j*18,width:80,height:18,fill:j%2?'#f6f8fb':'#fff',stroke:C.line},g);txt(g,tx+i*80+40,ty+33+j*18,s,{'text-anchor':'middle','font-size':12.5,fill:C.navy});});tolOf.push(0.1);});
+      msg='좌표: 원점에서의 X·Y 값을 표로 준다. CNC 프로그램의 절대 좌표와 그대로 대응한다.';}
+    if(this.tol){hs.forEach((h,i)=>{const w=tolOf[i]*80;el('rect',{x:X(h)-w,y:y0-14,width:2*w,height:10,rx:3,fill:C.red,opacity:.55},g);txt(g,X(h),y0-18,'±'+fx(tolOf[i],1),{'text-anchor':'middle','font-size':12,'font-weight':700,fill:C.red});});
+      msg+='  (빨간 띠: 각 구멍이 있을 수 있는 범위, 크게 과장)';}
+    $('dm-out').textContent=msg;}}));
+
+/* 베어링 호칭 */
+safe('brg',()=>widget('w-brg',{playing:false,n:'6205',
+  T:{'6200':[10,30,9,0.6],'6201':[12,32,10,0.6],'6202':[15,35,11,0.6],'6203':[17,40,12,0.6],'6204':[20,47,14,1],'62/22':[22,50,14,1],'6205':[25,52,15,1],'6210':[50,null,null,null]},
+  init(){this.g=el('g',{},this.svg);group(this.box,'data-bn',x=>{this.n=x;this.draw();});},
+  draw(){const g=this.g;g.innerHTML='';const t=this.T[this.n];const d=t[0],D=t[1]||90;const k=2.1,cx=150,cy=125;
+    el('circle',{cx,cy,r:D/2*k,fill:C.soft,stroke:C.navy,'stroke-width':2},g);el('circle',{cx,cy,r:(D/2-(D-d)/6)*k,fill:'#fff',stroke:C.navy,'stroke-width':1.2},g);
+    el('circle',{cx,cy,r:(d/2+(D-d)/6)*k,fill:C.soft,stroke:C.navy,'stroke-width':1.2},g);el('circle',{cx,cy,r:d/2*k,fill:'#fff',stroke:C.navy,'stroke-width':2},g);
+    const rb=(D-d)/4*k*0.55,rm=(d+D)/4*k;for(let i=0;i<9;i++){const a=i/9*Math.PI*2;el('circle',{cx:cx+Math.cos(a)*rm,cy:cy+Math.sin(a)*rm,r:rb,fill:C.gold,stroke:C.navy},g);}
+    el('line',{x1:cx-d/2*k,y1:cy,x2:cx+d/2*k,y2:cy,stroke:C.red,'stroke-width':2,'marker-start':'url(#ahs)','marker-end':'url(#ahn)'},g);
+    txt(g,cx,cy-6,'d = '+d,{'text-anchor':'middle','font-size':15,'font-weight':700,fill:C.red});
+    const s=this.n;const tx=310;
+    txt(g,tx,50,s,{'font-size':34,'font-weight':800,fill:C.navy});
+    const head=s.includes('/')?s.split('/')[0]:s.slice(0,2),tail=s.includes('/')?'/'+s.split('/')[1]:s.slice(2);
+    txt(g,tx,82,'앞 "'+head+'" : 6 = 깊은 홈 볼 베어링, 2 = 치수 계열',{'font-size':13,fill:C.muted});
+    txt(g,tx,104,'뒤 "'+tail+'" : 안지름 번호',{'font-size':13,fill:C.muted});
+    let calc;const nn=parseInt(tail.replace('/',''),10);
+    if(tail.startsWith('/'))calc='/ 뒤 숫자 그대로 → '+d+' mm';else if(nn<4)calc='00·01·02·03은 외운다 → '+d+' mm';else calc=nn+' × 5 = '+d+' mm';
+    txt(g,tx,140,'안지름 d: '+calc,{'font-size':15,'font-weight':700,fill:C.red});
+    if(t[1]){txt(g,tx,170,'바깥지름 D = '+t[1]+' mm',{'font-size':14,fill:C.navy});txt(g,tx,192,'폭 B = '+t[2]+' mm',{'font-size':14,fill:C.navy});txt(g,tx,214,'모서리 치수 r(최소) = '+t[3]+' mm',{'font-size':14,fill:C.navy});}
+    else txt(g,tx,175,'D·B·r은 베어링 치수표에서 찾는다',{'font-size':13.5,fill:C.muted});
+    $('brg-out').textContent=s+' → 안지름 '+d+' mm'+(t[1]?` · 바깥지름 ${t[1]} · 폭 ${t[2]} (교재 9쪽 표)`:'');}}));
+
+/* ================= 9차시 ================= */
+/* 치수 공차 */
+safe('tol',()=>widget('w-tol',{playing:false,u:0.021,l:0,
+  init(){this.g=el('g',{},this.svg);slider('tl-u',x=>{this.u=x;this.draw();});slider('tl-l',x=>{this.l=x;this.draw();});},
+  draw(){const g=this.g;g.innerHTML='';const y0=130,k=1800,u=this.u,l=this.l;const ok=u>l;
+    el('line',{x1:30,y1:y0,x2:530,y2:y0,stroke:C.navy,'stroke-width':2},g);txt(g,34,y0-6,'기준선 ∅20.000 (치수 허용차 0)',{'font-size':12.5,fill:C.navy,'font-weight':700});
+    el('rect',{x:60,y:y0,width:120,height:70,fill:C.soft,stroke:C.navy},g);txt(g,120,y0+40,'기준 치수 20',{'text-anchor':'middle','font-size':12.5,fill:C.navy});
+    const yu=y0-u*k,yl=y0-l*k;
+    if(ok){el('rect',{x:240,y:yu,width:120,height:yl-yu,fill:C.gold,opacity:.75,stroke:C.navy},g);txt(g,300,(yu+yl)/2+5,'공차 '+fx(u-l,3),{'text-anchor':'middle','font-size':13,'font-weight':700,fill:C.navy});}
+    [[yu,'위 치수 허용차 '+(u>=0?'+':'')+fx(u,3),'최대 허용 치수 '+fx(20+u,3)],[yl,'아래 치수 허용차 '+(l>=0?'+':'')+fx(l,3),'최소 허용 치수 '+fx(20+l,3)]].forEach(([y,a,b],i)=>{
+      el('line',{x1:230,y1:y,x2:520,y2:y,stroke:i?C.teal:C.red,'stroke-width':1.5,'stroke-dasharray':'5 3'},g);txt(g,372,y+(i?16:-6),a,{'font-size':12.5,fill:i?C.teal:C.red,'font-weight':700});txt(g,372,y+(i?32:-22),b,{'font-size':12,fill:C.muted});});
+    txt(g,30,232,'(허용차는 크게 확대하여 그렸다)',{'font-size':11.5,fill:C.muted});
+    $('tl-out').textContent=ok?`최대 허용 치수 ${fx(20+u,3)} − 최소 허용 치수 ${fx(20+l,3)} = 공차 ${fx(u-l,3)} mm`:'위 치수 허용차가 아래 치수 허용차보다 커야 한다.';}}));
+
+/* 끼워맞춤 */
+safe('fit',()=>widget('w-fit',{s:'g6',t:0,
+  S:{g6:[-20,-7],h6:[-13,0],k6:[2,15],m6:[8,21],p6:[22,35],s6:[35,48]},
+  init(){this.g=el('g',{},this.svg);group(this.box,'data-ft',x=>{this.s=x;this.t=0;});},
+  step(dt){this.t=(this.t+dt*0.35)%1.4;},
+  draw(){const g=this.g;g.innerHTML='';const [ei,es]=this.S[this.s];const H=[0,21];const y0=135,k=2;
+    el('line',{x1:20,y1:y0,x2:250,y2:y0,stroke:C.navy,'stroke-width':2},g);txt(g,22,y0-5,'0 (∅20)',{'font-size':11.5,fill:C.navy,'font-weight':700});
+    el('rect',{x:60,y:y0-H[1]*k,width:60,height:(H[1]-H[0])*k,fill:C.teal,opacity:.8},g);txt(g,90,y0+16,'구멍 H7',{'text-anchor':'middle','font-size':12.5,fill:C.teal,'font-weight':700});
+    el('rect',{x:150,y:y0-es*k,width:60,height:(es-ei)*k,fill:C.gold,opacity:.9,stroke:C.navy},g);txt(g,180,y0-es*k-6,'축 '+this.s,{'text-anchor':'middle','font-size':12.5,fill:'#9a7400','font-weight':700});
+    [[H[1],62],[H[0],62],[es,212],[ei,212]].forEach(([v,x])=>txt(g,x+(x>200?6:-46),y0-v*k+4,(v>0?'+':'')+v,{'font-size':11,fill:C.muted}));
+    txt(g,20,250,'공차역 (단위 μm)',{'font-size':11.5,fill:C.muted});
+    const maxC=H[1]-ei,minC=H[0]-es;let kind,msg;
+    if(minC>=0){kind='헐거운';msg=`헐거운 끼워맞춤 — 최소 틈새 ${minC} μm, 최대 틈새 ${maxC} μm`;}
+    else if(maxC<=0){kind='억지';msg=`억지 끼워맞춤 — 최소 죔새 ${-maxC} μm, 최대 죔새 ${-minC} μm (축 최대 − 구멍 최소)`;}
+    else{kind='중간';msg=`중간 끼워맞춤 — 최대 틈새 ${maxC} μm, 최대 죔새 ${-minC} μm`;}
+    // 오른쪽: 끼우는 모습
+    const cx=420,top=60;const gap=kind==='헐거운'?10:(kind==='중간'?2:-6);
+    el('rect',{x:cx-80,y:top+60,width:44,height:130,fill:'#c9d4df',stroke:C.navy},g);el('rect',{x:cx+36,y:top+60,width:44,height:130,fill:'#c9d4df',stroke:C.navy},g);
+    const p=Math.min(1,this.t);const stopAt=kind==='억지'?0.28:(kind==='중간'?0.75:1);const pp=Math.min(p,stopAt);
+    const sw=72-gap*2,sy=top-40+pp*150;
+    el('rect',{x:cx-sw/2,y:sy,width:sw,height:110,rx:5,fill:C.gold,stroke:C.navy,'stroke-width':1.5},g);
+    txt(g,cx,30,kind+' 끼워맞춤',{'text-anchor':'middle','font-size':16,'font-weight':800,fill:kind==='억지'?C.red:(kind==='중간'?C.navy:C.teal)});
+    if(p>=stopAt&&kind!=='헐거운'){el('path',{d:`M${cx} ${sy-34} v24`,stroke:C.red,'stroke-width':5,'marker-end':'url(#ah)'},g);
+      txt(g,cx+40,sy-16,kind==='억지'?'압입·가열·냉각':'힘을 주어',{'font-size':12.5,fill:C.red,'font-weight':700});}
+    $('fit-out').textContent=`H7(0~+21) / ${this.s}(${ei>0?'+':''}${ei}~${es>0?'+':''}${es}) → ${msg}`;}}));
+
+/* IT 등급 그래프 */
+safe('it',()=>widget('w-it',{playing:false,
+  init(){const g=el('g',{},this.svg);const V=[0.6,1,1.5,2.5,4,6,9,13,21,33,52,84,130,210,330,520,840,1300,2100,3300];
+    const L=['01','0'].concat([...Array(18)].map((_,i)=>''+(i+1)));const X0=60,W=560,Y0=230,Hh=200;const y=v=>Y0-(Math.log10(v)-Math.log10(0.3))/(Math.log10(5000)-Math.log10(0.3))*Hh;
+    [1,10,100,1000].forEach(v=>{el('line',{x1:X0,y1:y(v),x2:X0+W,y2:y(v),stroke:C.line},g);txt(g,X0-6,y(v)+4,v>=1000?(v/1000)+' mm':v+' μm',{'text-anchor':'end','font-size':11.5,fill:C.muted});});
+    const bw=W/20;V.forEach((v,i)=>{const col=i<=5?C.navy:(i<=11?C.teal:C.gold);const r=el('rect',{x:X0+i*bw+3,y:y(v),width:bw-6,height:Y0-y(v),fill:col,rx:2},g);
+      const tt=el('title',{},r);tt.textContent='IT'+L[i]+' = '+v+' μm';
+      txt(g,X0+i*bw+bw/2,Y0+16,L[i],{'text-anchor':'middle','font-size':11,fill:C.navy,'font-weight':700});});
+    txt(g,X0+W/2,Y0+38,'IT 등급 (기준 치수 18~30 mm)',{'text-anchor':'middle','font-size':12,fill:C.muted});
+    [[0,5,'게이지류',C.navy],[6,11,'끼워맞춤',C.teal],[12,19,'끼워맞춤 이외',C.gold]].forEach(([a,b,s,c])=>{el('line',{x1:X0+a*bw+3,y1:16,x2:X0+(b+1)*bw-3,y2:16,stroke:c,'stroke-width':5},g);txt(g,X0+(a+b+1)/2*bw,32,s,{'text-anchor':'middle','font-size':12.5,'font-weight':700,fill:C.navy});});
+    $('it-out').textContent='같은 ∅20이라도 IT7 공차는 21 μm(0.021 mm), IT11은 130 μm, IT18은 3.3 mm이다. 등급이 1 오를 때마다 약 1.6배씩 커진다.';},
+  draw(){}}));
+
+/* ================= 10차시 ================= */
+safe('sort10',()=>sorter('sort10','data-gt'));
+
+/* 표면 거칠기 */
+safe('rough',()=>widget('w-rough',{playing:false,v:'ra',p:'l',
+  init(){this.g=el('g',{},this.svg);seed=29;const N=360;const z=[];
+    for(let i=0;i<N;i++){const x=i/N;z.push(Math.sin(x*2*Math.PI*9)*0.9+Math.sin(x*2*Math.PI*23+1.3)*0.5+Math.sin(x*2*Math.PI*51+0.4)*0.25+gauss()*0.18);}
+    const m=z.reduce((a,b)=>a+b,0)/N;const zz=z.map(v=>v-m);const ra=zz.reduce((a,b)=>a+Math.abs(b),0)/N;this.z=zz.map(v=>v/ra);
+    group(this.box,'data-rv',x=>{this.v=x;this.draw();});group(this.box,'data-rp',x=>{this.p=x;this.draw();});},
+  draw(){const g=this.g;g.innerHTML='';const RA={ff:25,l:6.3,g:1.6,lp:0.2}[this.p];const NM={ff:'줄 가공',l:'선반 가공',g:'연삭 가공',lp:'래핑'}[this.p];
+    const z=this.z,N=z.length,X0=30,W=500,y0=120,K=26;const X=i=>X0+i/(N-1)*W,Y=v=>y0-v*K;
+    const pts=z.map((v,i)=>[X(i),Y(v)]);
+    if(this.v==='ra'){el('path',{d:pathOf(pts)+` L${X(N-1)} ${y0} L${X0} ${y0} Z`,fill:C.teal,opacity:.35},g);}
+    el('path',{d:pathOf(pts),fill:'none',stroke:C.navy,'stroke-width':1.8},g);
+    el('line',{x1:X0,y1:y0,x2:X0+W,y2:y0,stroke:C.red,'stroke-width':1.4,'stroke-dasharray':'6 4'},g);txt(g,X0+W+4,y0+4,'중심선',{'font-size':11,fill:C.red});
+    const mx=Math.max(...z),mn=Math.min(...z);
+    // 봉우리·골(국소 극값)
+    const pk=[],vl=[];for(let i=2;i<N-2;i++){if(z[i]>z[i-1]&&z[i]>=z[i+1]&&z[i]>z[i-2]&&z[i]>=z[i+2])pk.push(i);if(z[i]<z[i-1]&&z[i]<=z[i+1]&&z[i]<z[i-2]&&z[i]<=z[i+2])vl.push(i);}
+    const p5=pk.sort((a,b)=>z[b]-z[a]).slice(0,5),v5=vl.sort((a,b)=>z[a]-z[b]).slice(0,5);
+    const ap=p5.reduce((a,i)=>a+z[i],0)/5,av=v5.reduce((a,i)=>a+z[i],0)/5;
+    let val,msg;
+    if(this.v==='ry'){[mx,mn].forEach(v=>el('line',{x1:X0,y1:Y(v),x2:X0+W,y2:Y(v),stroke:C.gold,'stroke-width':2},g));
+      el('line',{x1:X0+W-20,y1:Y(mx),x2:X0+W-20,y2:Y(mn),stroke:C.red,'stroke-width':2,'marker-start':'url(#ahs)','marker-end':'url(#ahn)'},g);
+      val=(mx-mn)*RA;msg=`Ry(시험 기준 최대 높이) = 가장 높은 봉우리 − 가장 깊은 골 = ${fx(val,2)} μm`;}
+    else if(this.v==='rz'){p5.forEach(i=>el('circle',{cx:X(i),cy:Y(z[i]),r:5,fill:C.red},g));v5.forEach(i=>el('circle',{cx:X(i),cy:Y(z[i]),r:5,fill:C.teal},g));
+      [ap,av].forEach((v,j)=>el('line',{x1:X0,y1:Y(v),x2:X0+W,y2:Y(v),stroke:j?C.teal:C.red,'stroke-width':1.5,'stroke-dasharray':'4 3'},g));
+      val=(ap-av)*RA;msg=`Rz(시험 기준 10점 평균) = 높은 봉우리 5개 평균 − 깊은 골 5개 평균 = ${fx(val,2)} μm`;}
+    else{val=RA;msg=`Ra = 중심선에서의 높이(색칠한 넓이)를 평균한 값 = ${fx(val,2)} μm`;}
+    txt(g,X0,232,NM+' 예시 · 세로 배율은 자동(실제 높이는 μm 단위)',{'font-size':12,fill:C.muted});
+    txt(g,X0,22,'Ra '+fx(RA,2)+'  ·  Ry '+fx((mx-mn)*RA,2)+'  ·  Rz '+fx((ap-av)*RA,2)+' μm',{'font-size':14,'font-weight':700,fill:C.navy});
+    $('rough-out').textContent=msg;}}));
+
+/* 기하공차: 직각도 공차역 */
+safe('gdt',()=>widget('w-gdt',{playing:false,a:0.012,
+  init(){this.g=el('g',{},this.svg);slider('gd-a',x=>{this.a=x;this.draw();});},
+  draw(){const g=this.g;g.innerHTML='';const a=this.a,K=2000,yb=220,yt=60,x0=300;
+    el('rect',{x:40,y:yb,width:440,height:16,fill:'url(#hatch)',stroke:C.navy},g);txt(g,60,yb+34,'데이텀 A (기준면)',{'font-size':13,'font-weight':700,fill:C.teal});
+    el('path',{d:`M120 ${yb} V${yt} H${x0} L${x0+a*K} ${yb} Z`,fill:C.tsoft,stroke:'none'},g);
+    el('line',{x1:x0,y1:yt,x2:x0+a*K,y2:yb,stroke:a<=0.02?C.navy:C.red,'stroke-width':3},g);
+    el('path',{d:`M120 ${yb} V${yt} H${x0}`,fill:'none',stroke:C.navy,'stroke-width':3},g);
+    const zx=Math.min(x0,x0+a*K)-2;el('rect',{x:zx,y:yt-10,width:0.02*K,height:yb-yt+10,fill:C.gold,opacity:.28},g);
+    [zx,zx+0.02*K].forEach(x=>el('line',{x1:x,y1:yt-14,x2:x,y2:yb,stroke:'#9a7400','stroke-width':1.5,'stroke-dasharray':'6 4'},g));
+    txt(g,zx+0.01*K,yt-20,'공차역 0.02',{'text-anchor':'middle','font-size':12.5,'font-weight':700,fill:'#9a7400'});
+    txt(g,150,140,'부품',{'font-size':14,fill:C.navy});txt(g,x0+a*K+10,yb-10,'측정 면',{'font-size':12,fill:C.navy});
+    txt(g,40,30,'(가로 방향을 크게 확대: 0.02 mm = '+0.02*K+' px)',{'font-size':11.5,fill:C.muted});
+    $('gd-av').textContent=fx(a,3)+' mm';const ok=a<=0.02;
+    $('gd-out').textContent=ok?'면 전체가 데이텀 A에 수직인 두 평면(간격 0.02) 사이에 들어간다 → 합격':'면이 공차역(0.02)을 벗어난다 → 불합격';}}));
+
+/* ================= 11차시: 간단한 3D 투영 ================= */
+const T3={
+  circ(cx,cy,r,n,a0,a1){const P=[];a0=a0||0;a1=a1===undefined?Math.PI*2:a1;const full=Math.abs(a1-a0-Math.PI*2)<1e-9;const m=full?n:n+1;
+    for(let i=0;i<m;i++){const a=a0+(a1-a0)*i/n;P.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}return P;},
+  /* 2D 윤곽(구멍 포함)을 w0~w1로 돌출. map(u,v,w)->[x,y,z] */
+  prism(outer,holes,w0,w1,map,opt){opt=opt||{};const F=[];const M=(p,w)=>map(p[0],p[1],w);
+    if(opt.bottom!==false)F.push({loops:[outer.map(p=>M(p,w0))].concat(holes.map(h=>h.map(p=>M(p,w0)))),col:opt.col,tag:'cap0'});
+    if(opt.top!==false)F.push({loops:[outer.map(p=>M(p,w1))].concat(holes.map(h=>h.map(p=>M(p,w1)))),col:opt.col,tag:'cap1'});
+    [outer].concat(holes).forEach(L=>{for(let i=0;i<L.length;i++){const a=L[i],b=L[(i+1)%L.length];
+      const f={loops:[[M(a,w0),M(b,w0),M(b,w1),M(a,w1)]],col:opt.col,side:true};if(opt.sideTag)opt.sideTag(f,a,b);F.push(f);}});
+    return F;},
+  mapZ:(u,v,w)=>[u,v,w], mapX:(u,v,w)=>[w,u,v],
+  shade(hex,k){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;const f=c=>Math.round(Math.min(255,c*k));return `rgb(${f(r)},${f(g)},${f(b)})`;},
+  render(g,faces,o){const yaw=o.yaw,elv=o.el||0.6,S=o.s||2.4,cx=o.cx,cy=o.cy;const ce=Math.cos(elv),se=Math.sin(elv),c=Math.cos(yaw),s=Math.sin(yaw);
+    const P=p=>{const xr=p[0]*c-p[1]*s,yr=p[0]*s+p[1]*c;return [cx+xr*S,cy-(p[2]*ce+yr*se)*S,yr*ce-p[2]*se];};
+    const Lt=[-0.45,-0.75,0.85],ln=Math.hypot(...Lt);
+    const items=faces.map(f=>{const L0=f.loops[0];let nx=0,ny=0,nz=0;for(let i=0;i<L0.length;i++){const a=L0[i],b=L0[(i+1)%L0.length];nx+=(a[1]-b[1])*(a[2]+b[2]);ny+=(a[2]-b[2])*(a[0]+b[0]);nz+=(a[0]-b[0])*(a[1]+b[1]);}
+      const nn=Math.hypot(nx,ny,nz)||1;const lam=Math.abs((nx*Lt[0]+ny*Lt[1]+nz*Lt[2])/nn/ln);
+      const pl=f.loops.map(L=>L.map(P));let d=0;pl[0].forEach(q=>d+=q[2]);d/=pl[0].length;return {f,pl,d,k:0.62+0.45*lam};});
+    items.sort((a,b)=>b.d-a.d);
+    items.forEach(it=>{const dd=it.pl.map(L=>'M'+L.map(q=>fx(q[0],1)+' '+fx(q[1],1)).join('L')+'Z').join('');const f=it.f;
+      if(o.mode==='wire'){el('path',{d:dd,fill:'none',stroke:f.col||C.navy,'stroke-width':1.2,opacity:f.alpha===undefined?1:f.alpha},g);return;}
+      const fill=f.hatch?'url(#hatch)':T3.shade(f.col||'#7fc3cf',it.k);
+      el('path',{d:dd,fill,'fill-rule':'evenodd',stroke:f.edge||C.navy,'stroke-width':f.side?0.6:1.2,'stroke-opacity':f.side?0.35:0.9,opacity:f.alpha===undefined?(o.mode==='surf'?0.8:1):f.alpha},g);});
+  }
+};
+
+/* 모델링 방식 */
+safe('mtype',()=>widget('w-mtype',{mode:'solid',cut:false,yaw:0.6,
+  init(){this.g=el('g',{},this.svg);group(this.box,'data-mt',x=>{this.mode=x;});const cb=this.box.querySelector('[data-mt2]');cb.onclick=()=>{this.cut=!this.cut;cb.classList.toggle('on',this.cut);};},
+  step(dt){this.yaw+=dt*0.35;},
+  draw(){const g=this.g;g.innerHTML='';let F;
+    if(!this.cut){F=T3.prism([[-30,-20],[30,-20],[30,20],[-30,20]],[T3.circ(0,0,10,24)],-15,15,T3.mapZ,{col:'#5fb3c2'});}
+    else{const half=[[-30,-20],[0,-20],[0,-10]].concat(T3.circ(0,0,10,16,-Math.PI/2,-Math.PI*1.5).slice(1,-1)).concat([[0,10],[0,20],[-30,20]]);
+      F=T3.prism(half,[],-15,15,T3.mapZ,{col:'#5fb3c2',sideTag:(f,a,b)=>{if(Math.abs(a[0])<1e-6&&Math.abs(b[0])<1e-6){f.section=true;if(this.mode==='solid')f.hatch=true;}}});
+      if(this.mode==='surf')F=F.filter(f=>!f.section);}
+    T3.render(g,F,{yaw:this.yaw,cx:250,cy:150,s:3,mode:this.mode==='wire'?'wire':this.mode});
+    const M={wire:'와이어프레임 — 모서리 선만 있다. 뒤쪽 선까지 다 보여 앞뒤를 구별하기 어렵다.',surf:'서피스 — 면(껍질)이 있어 숨은면이 가려진다. 잘라 보면 속이 비어 있다.',solid:'솔리드 — 속이 꽉 찬 입체. 잘라도 단면(해칭)이 생기고, 부피·질량·무게 중심을 계산할 수 있다.'};
+    $('mt-out').textContent=M[this.mode]+(this.cut&&this.mode==='wire'?' (와이어프레임은 단면을 만들 수 없다)':'');}}));
+
+/* 3D 피처 명령 */
+safe('feat',()=>widget('w-feat',{c:'ext',t:0,yaw:0.7,
+  D:{ext:['돌출','2D 스케치에 그린 형상을 기초 면으로 하여 단방향 또는 양방향으로 높이를 주어 3D 모델을 만든다. 대표적인 솔리드 생성 명령이다.',[['CATIA','Pad'],['Inventor','돌출'],['SolidWorks','돌출 보스'],['NX','돌출']]],
+     rev:['회전 돌출','2D 스케치 형상을 선택한 축을 기준으로 회전시켜 3D 모델을 만든다. 축·풀리처럼 둥근 부품에 쓴다.',[['CATIA','Shaft'],['Inventor','회전'],['SolidWorks','회전 보스'],['NX','회전']]],
+     swp:['경로 곡선 돌출','2D 스케치 형상을 선택한 경로 곡선을 따라 이동시켜 3D 모델을 만든다(스윕). 파이프·스프링에 쓴다.',[['CATIA','Rib'],['Inventor','스윕'],['SolidWorks','스윕'],['NX','스위핑']]],
+     cut:['돌출 빼기(구멍)','기존 솔리드에서 새 스케치 형상만큼 파내거나 제거한다. 기존 형상이 없으면 쓸 수 없다. 구멍 명령은 점 위치에 구멍 종류(단순·카운터 보어·카운터 싱크 등)를 지정한다.',[['CATIA','Pocket / Hole'],['Inventor','돌출(차집합) / 구멍'],['SolidWorks','돌출 컷 / 구멍 가공 마법사'],['NX','돌출(빼기) / 구멍']]],
+     fil:['3D 필렛','솔리드 형상의 모서리를 부드러운 곡면으로 처리한다. 수학적으로 만들 수 없는 형상이면 실패한다.',[['CATIA','Edge Fillet'],['Inventor','모깎기'],['SolidWorks','필렛'],['NX','모서리 블렌드']]],
+     cha:['3D 챔퍼','솔리드 형상의 모서리에 모따기(45° 등)를 한다. 주의 사항은 필렛과 같다.',[['CATIA','Chamfer'],['Inventor','모따기'],['SolidWorks','모따기'],['NX','모따기']]],
+     mir:['미러','기존 솔리드 모델을 참조 평면을 기준으로 대칭 이동하거나 복사한다. 좌우 대칭 부품을 절반만 그리고 완성할 때 쓴다.',[['CATIA','Mirror'],['Inventor','대칭'],['SolidWorks','대칭 복사'],['NX','대칭 피처']]],
+     pat:['원형 패턴','선택한 피처를 축을 중심으로 일정한 각도마다 복사한다. 플랜지의 볼트 구멍 배치에 쓴다.',[['CATIA','Circular Pattern'],['Inventor','원형 패턴'],['SolidWorks','원형 패턴'],['NX','패턴 피처(원형)']]]},
+  init(){this.g=el('g',{},this.svg);group(this.box,'data-fc',x=>{this.c=x;this.t=0;this.info();});this.info();},
+  info(){const d=this.D[this.c];$('feat-name').textContent=d[0];$('feat-desc').textContent=d[1];
+    $('feat-tbl').innerHTML='<tr><th>CAD</th><th>명령 이름</th></tr>'+d[2].map(r=>`<tr><td class="c">${r[0]}</td><td>${r[1]}</td></tr>`).join('');},
+  step(dt){this.t+=dt/2.6;if(this.t>1.6)this.t=0;this.yaw+=dt*0.25;},
+  draw(){const g=this.g;g.innerHTML='';const t=Math.min(1,this.t);const e=t*t*(3-2*t);let F=[];const TEAL='#4fb4c4',GREY='#c9d4df';
+    const sketch=(pts,map)=>F.push({loops:[pts.map(p=>map(p[0],p[1],0))],col:'#fff4d6',alpha:0.9});
+    if(this.c==='ext'){const L=[[-30,-20],[30,-20],[30,0],[0,0],[0,20],[-30,20]];sketch(L,T3.mapZ);if(e>0.02)F=F.concat(T3.prism(L,[],0,28*e,T3.mapZ,{col:TEAL}));}
+    if(this.c==='rev'){const pr=[[0,0],[22,0],[22,14],[12,14],[12,46],[0,46]];const A=Math.max(0.05,Math.PI*2*e);const n=Math.max(2,Math.ceil(36*e));
+      const P=(r,z,a)=>[r*Math.cos(a),r*Math.sin(a),z];
+      for(let i=0;i<n;i++){const a0=A*i/n,a1=A*(i+1)/n;for(let j=0;j<pr.length;j++){const p=pr[j],q=pr[(j+1)%pr.length];if(p[0]===0&&q[0]===0)continue;
+        F.push({loops:[[P(p[0],p[1],a0),P(q[0],q[1],a0),P(q[0],q[1],a1),P(p[0],p[1],a1)]],col:TEAL,side:true});}}
+      F.push({loops:[pr.map(p=>P(p[0],p[1],0))],col:'#fff4d6'});if(e<0.999)F.push({loops:[pr.map(p=>P(p[0],p[1],A))],col:TEAL});
+      F.push({loops:[[[0,0,-6],[0,0.01,-6],[0,0.01,56],[0,0,56]]],col:C.red,edge:C.red});}
+    if(this.c==='swp'){const path=[];for(let i=0;i<=10;i++)path.push([-45+i*4.5,-15,0]);for(let i=1;i<=14;i++){const a=-Math.PI/2+i/14*Math.PI/2;path.push([0+30*Math.cos(a),15+30*Math.sin(a),0]);}
+      path.forEach((p,i)=>{if(i)F.push({loops:[[path[i-1],p,[p[0],p[1],p[2]+0.01]]],col:C.red,edge:C.red,side:true});});
+      const m=Math.max(2,Math.round(path.length*e));const R=7,k=14;const ring=i=>{const p=path[i],q=path[Math.min(path.length-1,i+1)],o=path[Math.max(0,i-1)];
+        let tx=q[0]-o[0],ty=q[1]-o[1];const l=Math.hypot(tx,ty);tx/=l;ty/=l;const nx=-ty,ny=tx;return [...Array(k)].map((_,j)=>{const a=j/k*Math.PI*2;return [p[0]+nx*R*Math.cos(a),p[1]+ny*R*Math.cos(a),p[2]+R*Math.sin(a)];});};
+      const rings=[];for(let i=0;i<m;i++)rings.push(ring(i));
+      for(let i=0;i<m-1;i++)for(let j=0;j<k;j++){const a=rings[i][j],b=rings[i][(j+1)%k],c2=rings[i+1][(j+1)%k],d=rings[i+1][j];F.push({loops:[[a,b,c2,d]],col:TEAL,side:true});}
+      F.push({loops:[rings[0]],col:'#fff4d6'});F.push({loops:[rings[m-1]],col:TEAL});}
+    if(this.c==='cut'){const R=[[-32,-22],[32,-22],[32,22],[-32,22]],h=T3.circ(0,0,10,28);const dep=20*e;
+      if(dep<0.3)F=T3.prism(R,[],0,20,T3.mapZ,{col:GREY});
+      else{F=T3.prism(R,[],0,20-dep,T3.mapZ,{col:GREY,top:true});F=F.concat(T3.prism(R,[h],20-dep,20,T3.mapZ,{col:GREY,bottom:false,sideTag:(f,a,b)=>{if(Math.hypot(a[0],a[1])<11)f.col=TEAL;}}));}}
+    if(this.c==='fil'||this.c==='cha'){const r=13*e;let pr;if(r<0.3)pr=[[-20,0],[20,0],[20,30],[-20,30]];
+      else if(this.c==='fil'){pr=[[-20,0],[20,0],[20,30]].concat(T3.circ(-20+r,30-r,r,8,Math.PI/2,Math.PI)).concat([[-20,0]]);pr.pop();}
+      else pr=[[-20,0],[20,0],[20,30],[-20+r,30],[-20,30-r]];
+      F=T3.prism(pr,[],-32,32,T3.mapX,{col:GREY,sideTag:(f,a,b)=>{const inA=(a[0]<-20+r+1e-6&&a[1]>30-r-1e-6),inB=(b[0]<-20+r+1e-6&&b[1]>30-r-1e-6);if(r>=0.3&&inA&&inB)f.col=TEAL;}});}
+    if(this.c==='mir'){const L=[[4,-20],[40,-20],[40,-8],[16,-8],[16,20],[4,20]];F=T3.prism(L,[],0,14,T3.mapZ,{col:GREY});
+      F.push({loops:[[[0,-28,-4],[0,28,-4],[0,28,24],[0,-28,24]]],col:'#FFC145',alpha:0.35});
+      if(e>0.05){const ml=L.map(p=>[-p[0],p[1]]).reverse();F=F.concat(T3.prism(ml,[],0,14,T3.mapZ,{col:TEAL}).map(f=>Object.assign(f,{alpha:e})));}}
+    if(this.c==='pat'){const k=1+Math.min(5,Math.floor(e*6));const holes=[...Array(k)].map((_,i)=>T3.circ(26*Math.cos(i*Math.PI/3),26*Math.sin(i*Math.PI/3),5,14));
+      F=T3.prism(T3.circ(0,0,40,40),holes,0,10,T3.mapZ,{col:GREY,sideTag:(f,a)=>{if(Math.hypot(a[0],a[1])<36)f.col=TEAL;}});
+      F.push({loops:[[[0,0,-8],[0.01,0,-8],[0.01,0,22],[0,0,22]]],col:C.red,edge:C.red});}
+    T3.render(g,F,{yaw:this.yaw,cx:310,cy:205,s:3,mode:'solid'});
+    txt(g,16,24,this.D[this.c][0],{'font-size':16,'font-weight':800,fill:C.navy});
+    txt(g,16,320,'노란 면: 2D 스케치(또는 기준 평면)  ·  청록: 명령으로 새로 생긴 부분  ·  빨간 선: 축·경로',{'font-size':12,fill:C.muted});}}));
+
+/* ================= 자습판 추가 그림(Ⅱ) ================= */
+/* 11차시: 2D 편집 명령 6가지가 같은 자리에서 차례로 동작한다 */
+safe('edit2d',()=>{const ids=['ed-trim','ed-ext','ed-off','ed-mir','ed-rect','ed-circ'];if(!$(ids[0]))return;
+  const S=ids.map(i=>$(i));S.forEach(s=>s.innerHTML='');const G=S.map(s=>el('g',{},s));
+  const N=C.navy,T=C.teal,Rd=C.red,ln=(g,x1,y1,x2,y2,c,o)=>el('line',Object.assign({x1,y1,x2,y2,stroke:c,'stroke-width':3,'stroke-linecap':'round'},o||{}),g);
+  const shape='M100 90 V30 L60 30 L40 60 L60 90 Z';
+  const w={page:S[0].closest('.page'),playing:true,t:0,
+    step(dt){this.t=(this.t+dt*0.45)%1.6;},
+    draw(){const p=Math.min(this.t,1);G.forEach(g=>g.innerHTML='');
+      /* 트림: 경계(가로선) 아래로 삐져나온 부분이 잘려 사라진다 */
+      ln(G[0],20,55,200,55,N);ln(G[0],110,10,110,55,N);
+      if(p<0.5){ln(G[0],110,55,110,100,Rd,{'stroke-dasharray':'6 4'});txt(G[0],120,40+p*100,'잘라 냄',{'font-size':12,fill:Rd,'font-weight':700});}
+      else ln(G[0],110,55,110,100,Rd,{'stroke-dasharray':'6 4',opacity:Math.max(0,1-(p-0.5)*2.5)});
+      /* 연장: 선이 경계(세로선)까지 늘어난다 */
+      ln(G[1],190,10,190,100,N);ln(G[1],20,55,120,55,N);ln(G[1],120,55,120+70*p,55,T);
+      /* 옵셋: 같은 모양이 일정 거리만큼 바깥으로 평행 복사된다 */
+      el('rect',{x:40,y:25,width:140,height:60,rx:6,fill:'none',stroke:N,'stroke-width':3},G[2]);
+      const d=15*p;el('rect',{x:40-d,y:25-d,width:140+2*d,height:60+2*d,rx:6+d*0.4,fill:'none',stroke:T,'stroke-width':3,'stroke-dasharray':'8 4'},G[2]);
+      /* 미러: 기준선을 축으로 뒤집혀 복사된다 */
+      ln(G[3],110,5,110,105,C.muted,{'stroke-width':1.5,'stroke-dasharray':'12 3 2 3'});
+      el('path',{d:shape,fill:'#e2f3f5',stroke:N,'stroke-width':2.5},G[3]);
+      const s=1-2*p;el('path',{d:shape,fill:'#fff4d6',stroke:T,'stroke-width':2.5,opacity:.9,transform:`translate(110 0) scale(${s} 1) translate(-110 0)`},G[3]);
+      /* 직사각형 패턴: 가로·세로로 차례로 복사된다 */
+      const P=[[40,30],[90,30],[140,30],[190,30],[40,80],[90,80],[140,80],[190,80]];
+      P.forEach((q,i)=>{if(i===0||p*P.length>i)el('circle',{cx:q[0],cy:q[1],r:10,fill:i?'#e2f3f5':'#c9d4df',stroke:i?T:N,'stroke-width':2},G[4]);});
+      /* 원형 패턴: 중심축 둘레로 일정 각도마다 복사된다 */
+      el('circle',{cx:110,cy:55,r:45,fill:'none',stroke:C.muted,'stroke-dasharray':'12 3 2 3'},G[5]);el('circle',{cx:110,cy:55,r:3,fill:N},G[5]);
+      for(let i=0;i<6;i++){if(i&&p*6<=i)continue;const a=i*Math.PI/3;el('circle',{cx:110+Math.cos(a)*45,cy:55-Math.sin(a)*45,r:9,fill:i?'#e2f3f5':'#c9d4df',stroke:i?T:N,'stroke-width':2},G[5]);}
+      const a=p*Math.PI*2*5/6;el('path',{d:`M155 55 A45 45 0 ${a>Math.PI?1:0} 0 ${110+Math.cos(a)*45} ${55-Math.sin(a)*45}`,fill:'none',stroke:T,'stroke-width':2},G[5]);}};
+  widgets.push(w);w.draw();});
+
+/* 휴대폰·태블릿: 좌우로 밀어 쪽 넘기기, 세로 화면 안내 */
+safe('mobile',()=>{
+  const vp=$('viewport');let sx=null,sy=0,st=0;
+  vp.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1||e.target.closest('input,select,textarea')){sx=null;return;}
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();},{passive:true});
+  vp.addEventListener('touchend',e=>{
+    if(sx===null)return;
+    const zoomed=window.visualViewport&&window.visualViewport.scale>1.05;  /* 확대 중에는 화면 이동으로 본다 */
+    const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;sx=null;
+    if(!zoomed&&Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5&&Date.now()-st<800)show(cur+(dx<0?1:-1));},{passive:true});
+  const rot=$('rot');if(rot){
+    try{if(localStorage.getItem('cam-rot-off')==='1')document.body.classList.add('rot-off');}catch(e){}
+    $('rot-x').onclick=()=>{document.body.classList.add('rot-off');try{localStorage.setItem('cam-rot-off','1');}catch(e){}};}
+});
+
+/* 시작 */
+buildToc();
+let start=0;try{const h=parseInt((location.hash||'').replace('#p',''),10);if(h>0)start=h-1;}catch(e){}
+document.body.classList.toggle('teacher',teacher);
+if($('mode'))$('mode').textContent=teacher?'학생 보기로 전환':'교사 보기로 전환';
+show(start);fit();
+(function tick(ts){const dt=Math.min(0.05,(ts-last)/1000);last=ts;
+  widgets.forEach(w=>{if(w.page.classList.contains('on')&&w.playing){w.step(dt);w.draw();}});
+  minis.forEach(m=>{if(m.page.classList.contains('on'))m.step(dt);});requestAnimationFrame(tick);})(performance.now());
+/* 점검용: ?click=선택자1|선택자2 → 불러온 뒤 차례로 누른다 */
+try{const q=new URLSearchParams(location.search).get('click');if(q)setTimeout(()=>q.split('|').forEach((s,i)=>setTimeout(()=>{const e=document.querySelector(s);if(e)e.click();},i*50)),50);}catch(e){}
+/* 점검용: ?t=0.7 → 움직이는 그림의 진행 시점을 고정해 그린다 */
+try{const tq=parseFloat(new URLSearchParams(location.search).get('t'));if(!isNaN(tq))setTimeout(()=>widgets.forEach(w=>{if('t' in w){w.t=tq;w.playing=false;w.draw();}}),400);}catch(e){}
+
+</script>
+</body>
+</html>
